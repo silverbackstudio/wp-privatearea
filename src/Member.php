@@ -37,7 +37,7 @@ class Member {
     }
     
     public function avatar( $size ){
-        return get_avatar( $this->id, $size );
+        return get_avatar( $this->id(), $size );
     }
 
     public function profile(){
