@@ -5,7 +5,7 @@ namespace Svbk\WP\Plugins\PrivateArea\Shortcakes;
 use WP_Query;
 use Svbk\WP\Helpers;
 use Svbk\WP\Plugins\PrivateArea;
-use Svbk\WP\Shortcakes\Shortcake as Base;
+use Svbk\WP\Shortcakes\Forms\Form as Base;
 
 class Subscription extends Base {
     
@@ -33,6 +33,28 @@ class Subscription extends Base {
     public function confirmMessage(){
         return $this->confirmMessage ?: __('Thanks for your request, we will reply as soon as possible.', 'svbk-shortcakes');
     }    
+    
+    public function fields(){
+        return array(
+        		array(
+        			'label'  => esc_html__( 'Submit Button Label', 'svbk-privatearea' ),
+        			'attr'   => 'submit_button_label',
+        			'type'   => 'text',
+        			'encode' => true,
+        			'description' => esc_html__( 'Submit Button label text', 'svbk-privatearea' ),
+        		),
+        		array(
+        			'label'  => esc_html__( 'Form Type', 'svbk-privatearea' ),
+        			'attr'   => 'member_type',
+        			'type'   => 'select',
+		            'options' => array(
+				        array( 'value' => PrivateArea\ACL::ROLE_MEMBER, 'label' => esc_html__( 'Member', 'svbk-privatearea' ) ),
+				        array( 'value' => PrivateArea\ACL::ROLE_SUPPORTER, 'label' => esc_html__( 'Supporter', 'svbk-privatearea' ) ),
+				    ),
+        			'description' => esc_html__( 'Select the type of subscription', 'svbk-privatearea' ),
+        		)        		
+        );
+    }
     
     protected function getForm($set_send_params=false){
         
@@ -76,22 +98,5 @@ class Subscription extends Base {
         return json_encode( $response );
     }    
     
-    // function fields(){
-        
-    //     $fields = parent::fields();
-        
-    //     $fields[] = array(
-    //     			'label'  => esc_html__( 'Members Count', 'svbk-privatearea' ),
-    //     			'attr'   => 'subscribe',
-    //     			'type'   => 'text',
-    //     			'encode' => true,
-    //     			'description' => esc_html__( 'How many members to show', 'svbk-privatearea' ),
-    //     			'meta'   => array(
-    //     				'placeholder' =>  self::$defaults['count'],
-    //     			),
-    //         );
-            
-    //     return $fields;
-    // }
     
 }
