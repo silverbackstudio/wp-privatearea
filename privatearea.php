@@ -101,11 +101,32 @@ function svbk_mc_user_update_notices() {
         </div><?php
     
         delete_transient("svbk_mc_user_update_success");
-    }    
+    } 
+    
+    if ( $errors = get_transient( "svbk_mc_user_create_error" ) ) {  ?>
+        <div class="notice notice-error "> 
+            <?php foreach( $errors as $email => $error ) : ?>
+            <p><?php printf( __( 'Mailchimp Create Error for user <b>%s</b>: %s.', 'svbk-privatearea'), $email, $error ); ?></p>   
+            <?php endforeach; ?>
+            <p><?php _e('Please update values manually or subscribe the user to mailchimp list', 'svbk-privatearea'); ?></p>
+        </div><?php
+    
+        delete_transient("svbk_mc_user_create_error");
+    }
+    
+    if ( $messages = get_transient( "svbk_mc_user_create_success" ) ) {  ?>
+        <div class="notice notice-success is-dismissible"> 
+            <?php foreach( $messages as $email ) : ?>
+            <p><?php printf( __( 'Mailchimp create completed for user %s', 'svbk-privatearea'), $email); ?></p>   
+            <?php endforeach; ?>
+        </div><?php
+    
+        delete_transient("svbk_mc_user_create_success");
+    }     
 
 }  
 
-add_action( 'user_register', 'svbk_user_register_mc_sync' );
+add_action( 'user_register', 'svbk_user_register_mc' );
 
 function svbk_user_register_mc( $user_id ){
     
@@ -130,14 +151,14 @@ function svbk_user_register_mc( $user_id ){
 	]); 
 	
     if( ! $mailchimp->success() ) {
-        set_admin_notices_transient( "svbk_mc_user_update_error" , array( $email => $mailchimp->getLastError() ));
+        set_admin_notices_transient( "svbk_mc_user_create_error" , array( $email => $mailchimp->getLastError() ));
     } else {
-        set_admin_notices_transient( "svbk_mc_user_update_success" , array( $email ));
+        set_admin_notices_transient( "svbk_mc_user_create_success" , array( $email ));
     }	
     
 }
 
-add_action( 'user_register', 'svbk_user_register_create_profile', 9 );
+//add_action( 'user_register', 'svbk_user_register_create_profile', 9 );
 
 function svbk_user_register_create_profile( $user_id, $profile_meta = array() ){
     
@@ -162,7 +183,7 @@ function svbk_user_register_create_profile( $user_id, $profile_meta = array() ){
         $member->set_profile( $profile );
     }
     
-    return $member;
+    return $profile;
 }
 
 add_action( 'profile_update', 'svbk_ser_update_mc', 10, 2 );
@@ -288,7 +309,8 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
     }
   
     $profile->set_type( PrivateArea\ACL::ROLE_MEMBER );
-    
+    $member->set_type( PrivateArea\ACL::ROLE_MEMBER );
+
     add_post_meta( $profile->id(), 'svbk_last_transaction_id', $request->get_param('txn_id'), true );
     add_post_meta( $profile->id(), 'svbk_last_payer_id', $request->get_param('payer_id'), true );
     add_post_meta( $profile->id(), 'svbk_last_payer_email', $request->get_param('payer_email'), true );
@@ -348,8 +370,15 @@ if ( !function_exists('wp_new_user_notification') ) {
         try {
 
             $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
+            $member = new PrivateArea\Member( $user_id );
             
-            $results = $mandrill->messages->sendTemplate('wp-new-user', array(), array_merge_recursive(
+            if( $member->get_type() ){
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . $member->get_type() );
+            } else{
+                $template = 'wp-new-user';
+            }
+            
+            $results = $mandrill->messages->sendTemplate($template, array(), array_merge_recursive(
                 Helpers\Mailing\Mandrill::$messageDefaults,
                 array(
                     'to' => array(
@@ -394,4 +423,15 @@ if ( !function_exists('wp_new_user_notification') ) {
         }        
 
     }
+}
+
+add_filter( 'login_url', 'svbk_privatearea_login_page', 10, 3 );
+
+function svbk_privatearea_login_page( $login_url, $redirect, $force_reauth ) {
+    $login_page = get_permalink( get_theme_mod('private_area_home') );
+    
+    if( $login_page ) {
+        $login_url = add_query_arg( 'redirect_to', $redirect, $login_page );
+    }
+    return $login_url;
 }

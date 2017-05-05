@@ -9,15 +9,6 @@ class Subscription extends Submission {
     public $field_prefix = 'subms';
     public $action = 'svbk_subscription';
     
-    public $price = 250;
-    
-    public $mc_apikey = '';
-    public $braintreeConfig = array( 'accessToken' => '' );
-    public $orderPrefix = 'SVBK-';
-    public $orderDescriptor = 'SVBK*ORDER';
-    public $orderDescription = '';
-    public $braintreeGateway;
-    
     public $createdUser;
     
     public function setInputFields( $fields=array(), $set_local = true){
@@ -29,21 +20,21 @@ class Subscription extends Submission {
             array(
                 'last_name' => array( 
                     'required' => true,
-                    'label' => __('First Name', 'svbk-helpers'), 
+                    'label' => __('First Name', 'svbk-privatearea'), 
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
-                    'error' => __('Please enter first name', 'svbk-helpers')
+                    'error' => __('Please enter first name', 'svbk-privatearea')
                 ),
                 'first_name' => array( 
                     'required' => true,
-                    'label' => __('Last Name', 'svbk-helpers'), 
+                    'label' => __('Last Name', 'svbk-privatearea'), 
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
-                    'error' => __('Please enter last name', 'svbk-helpers')
+                    'error' => __('Please enter last name', 'svbk-privatearea')
                 ),                
                 'user_email' => array( 
                     'required' => true,
-                    'label' => __('Email Address', 'svbk-helpers'), 
+                    'label' => __('Email Address', 'svbk-privatearea'), 
                     'filter' => FILTER_VALIDATE_EMAIL,
-                    'error' => __('Invalid email address', 'svbk-helpers')
+                    'error' => __('Invalid email address', 'svbk-privatearea')
                 ),                
                 'billing_company' => array( 
                     'required' => false,
@@ -109,19 +100,6 @@ class Subscription extends Submission {
         
     }     
     
-    // protected function paymentGateway(){
-        
-    //     if(!is_a('Braintree_Gateway', $this->braintreeGateway)){
-    //         $this->braintreeGateway = new Braintree_Gateway($this->braintreeConfig);
-    //     }
-        
-    //     return $this->braintreeGateway;        
-    // }
-    
-    // public function getClientToken(){
-    //     return $this->paymentGateway()->clientToken()->generate();
-    // }
-    
     protected function mainAction(){
     
         $user_id = register_new_user( sanitize_user( $this->getInput('user_email') ) , $this->getInput('user_email') );
@@ -155,66 +133,13 @@ class Subscription extends Submission {
             )
         );
     
-        svbk_user_register_create_profile($user_id, $profile_meta);
+        $profile = svbk_user_register_create_profile($user_id, $profile_meta);
+        $member->set_profile( $profile );
         
         $this->createdUser = $member->id();
         
-        // $bt_result =  $this->paymentGateway()->transaction()->sale([
-        //     "amount" => $this->price,
-        //     'merchantAccountId' => 'EUR',
-        //     "paymentMethodNonce" => $this->getInput('paypalToken'),
-        //     "orderId" => $this->orderPrefix . date('YmdHis'),
-        //     "descriptor" => [
-        //       "name" => $this->orderDescriptor,
-        //     ],
-        //     "options" => [
-        //       "paypal" => [
-        //         "description" => $this->orderDescription,
-        //       ],
-        //     ]
-        // ]);
-        
-        // if ($bt_result->success) {
-        //     var_dump($bt_result);        
-        // }
-
-        
-        //     if( !empty( $this->mc_apikey ) && !empty( $this->mc_list_id )){
-        //         $mc = new MailChimp( $this->mc_apikey );
-                
-        //         $errors = $mc->subscribe( $this->mc_list_id, $this->getInput('email'), $this->subscribeAttributes() );
-                
-        //         array_walk($errors, array($this, 'addError'));
-        //     }
-        
     }    
-    
-    // public function formatResponse($errors, $form) {
-        
-    //     $response = json_decode( parent::formatResponse($errors, $form) );
-        
-    //     // $response['paypalConfig'] = array(
-    //     //         'authorization' => $this->getClientToken()
-    //     // );
-        
-    //     // $response['paypalConfig'] = array(
-    //     //         'authorization' => $this->getClientToken()
-    //     // );        
-        
-    //     $response['redirect'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AH35PAGK6PMS6&custom=4';
-        
-    // }
-        
-    
-    // protected function subscribeAttributes(){
-    //     return array( 
-    //         'merge_fields' => [ 
-    //             'FNAME'=> $this->getInput('fname'), 
-    //             'LNAME' => $this->getInput('lname'),
-    //             'MARKETING' => $this->getInput('policy_directMarketing') ? 'yes' : 'no',
-    //         ] 
-    //     );
-    // }
+
 
     
 }
