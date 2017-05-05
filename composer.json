@@ -1,0 +1,18 @@
+{
+    "name": "sliverbackstudio/wp-privatearea",
+    "description": "Private Area Plugin for WP",
+    "type": "wordpress-muplugin",
+    "authors": [
+        {
+            "name": "Brando Meniconi",
+            "email": "b.meniconi@silverbackstudio.it"
+        }
+    ],
+    "require": {
+        "silverbackstudio/wp-themehelper": "^1.0",
+        "silverbackstudio/wp-shortcakes": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {"Svbk\\WP\\Plugins\\PrivateArea\\": "src/"}
+    }    
+}

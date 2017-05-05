@@ -1,0 +1,186 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-05 13:12+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: ../../mu-plugins/wp-privatearea/privatearea.php:88
+#, php-format
+msgid "Mailchimp Update Error for user <b>%s</b>: %s."
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/privatearea.php:90
+msgid "Please update values manually or subscribe the user to mailchimp list"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/privatearea.php:99
+#, php-format
+msgid "Mailchimp update completed for user %s"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/privatearea.php:157
+#: ../../mu-plugins/wp-privatearea/privatearea.php:286
+#, php-format
+msgid "Business of %s"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/privatearea.php:362
+#, php-format
+msgid "Your account details at %s"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/ACL.php:17
+#: ../../mu-plugins/wp-privatearea/src/ACL.php:25
+msgid "Supporter"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/ACL.php:18
+#: ../../mu-plugins/wp-privatearea/src/ACL.php:39
+msgid "Member"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/Members.php:20
+msgid "Members List"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/Members.php:26
+msgid "Members Count"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/Members.php:30
+msgid "How many members to show"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/MemberInfo.php:18
+msgid "Member Info"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/MemberInfo.php:28
+msgid "Member Field"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/MemberInfo.php:32
+msgid "First Name"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/MemberInfo.php:33
+msgid "Last Name"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/MemberInfo.php:34
+msgid "Expire ETA"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/MemberInfo.php:35
+msgid "Member Type"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Shortcakes/Subscription.php:30
+msgid "Subscription Form"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:50
+msgid "Company Name"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:52
+msgid "Please enter your company name"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:56
+msgid "VAT ID / SSN"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:58
+msgid "Please enter your fiscal code or VAT ID"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:62
+msgid "Address"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:64
+msgid "Please enter valid address"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:68
+msgid "ZipCode"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:70
+msgid "Invalid zipcode"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:74
+msgid "City"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:76
+msgid "Invalid city"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:80
+msgid "State/Province"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:82
+msgid "Invalid state/province"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:86
+msgid "Country"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:88
+msgid "Invalid country"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:92
+msgid "Phone"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:94
+msgid "Invalid phone number"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:98
+msgid "Mobile"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:100
+msgid "Invalid mobile number"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:104
+msgid "Website"
+msgstr ""
+
+#: ../../mu-plugins/wp-privatearea/src/Form/Subscription.php:106
+msgid "Invalid website"
+msgstr ""
+
+#. Name of the plugin
+msgid "SilverbackStudio Member Private Area"
+msgstr ""
+
+#. Description of the plugin
+msgid "Private Area Functions and Automations"
+msgstr ""
+
+#. Author of the plugin
+msgid "Silverback Studio"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://www.silverbackstudio.it/"
+msgstr ""
