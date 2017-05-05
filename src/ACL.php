@@ -8,7 +8,7 @@ class ACL {
     const ROLE_MEMBER = 'member';
     const GET_ITEM_MEMBER_CAP_PREFIX = 'get_member_';
 
-    public function can_view( $post_type ){
+    public static function can_view( $post_type ){
     	return  ! get_field( 'restricted_content' ) || current_user_can( self::GET_ITEM_MEMBER_CAP_PREFIX . $post_type );
     }
     
