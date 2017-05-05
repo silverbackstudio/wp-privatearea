@@ -66,7 +66,7 @@ class Subscription extends Base {
         
         if( empty( $errors ) && $form->createdUser){
             $response['redirect'] = Helpers\Payment\PayPal::buttonUrl( 
-                Helpers\Theme::conf('paypal', 'button_id'), 
+                Helpers\Theme\Theme::conf('paypal', 'button_id'), 
                 array( 
                     'custom' => $form->createdUser,
                 )

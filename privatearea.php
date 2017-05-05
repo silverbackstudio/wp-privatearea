@@ -43,8 +43,8 @@ function set_admin_notices_transient( $handle, $value ){
 
 function svbk_mailchimp_request($email, $data, $update = true){
     
-    $mailchimp = new Helpers\MailChimp( Helpers\Theme::conf('mailing', 'mc_apikey') );
-    $list_id = Helpers\Theme::conf('mailing', 'mc_list_id');
+    $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
+    $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');
     
     if( $update ) {
         $subscriber_hash = $mailchimp->subscriberHash( $email );
@@ -61,8 +61,8 @@ function svbk_mailchimp_request($email, $data, $update = true){
 
 add_action( 'svbk_member_type_updated', function( $type, $member ) {
     
-    $mailchimp = new Helpers\MailChimp( Helpers\Theme::conf('mailing', 'mc_apikey') );
-    $list_id = Helpers\Theme::conf('mailing', 'mc_list_id');    
+    $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
+    $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');    
     
     $email = $member->meta('user_email');
     
@@ -112,8 +112,8 @@ function svbk_user_register_mc( $user_id ){
     $member = new PrivateArea\Member( $user_id );
     $email = $member->meta('user_email');
     
-    $mailchimp = new Helpers\MailChimp( Helpers\Theme::conf('mailing', 'mc_apikey') );
-    $list_id = Helpers\Theme::conf('mailing', 'mc_list_id');    
+    $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
+    $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');    
     
     $mailchimp->post("lists/$list_id/members", [
 			'email_address' => $email,
@@ -169,8 +169,8 @@ add_action( 'profile_update', 'svbk_ser_update_mc', 10, 2 );
 
 function svbk_user_update_mc( $user_id, $old_user_data ){
     
-    $mailchimp = new Helpers\MailChimp( Helpers\Theme::conf('mailing', 'mc_apikey') );
-    $list_id = Helpers\Theme::conf('mailing', 'mc_list_id');      
+    $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
+    $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');      
     
     $member = new PrivateArea\Member( $user_id );
     
@@ -219,9 +219,9 @@ add_action( 'rest_api_init', function () {
 
 function svbk_register_new_payment_webhook( WP_REST_Request $request ) {
  
-        $paypal = new Helpers\Payment\PayPal( Helpers\Theme::conf('paypal') );
+        $paypal = new Helpers\Payment\PayPal( Helpers\Theme\Theme::conf('paypal') );
         
-        $result = $paypal->verifyWebhook( $request, Helpers\Theme::conf('paypal', 'webhook_id') );
+        $result = $paypal->verifyWebhook( $request, Helpers\Theme\Theme::conf('paypal', 'webhook_id') );
         
         if( is_wp_error($result) ){
             return $result;
@@ -235,7 +235,7 @@ function svbk_register_new_payment_webhook( WP_REST_Request $request ) {
 
 function svbk_register_new_payment_ipn( WP_REST_Request $request ){
 
-    $result = Helpers\Payment\PayPal::verifyIPN( $request,  Helpers\Theme::conf('paypal', 'mode', 'sandbox' ) === 'sandbox' );
+    $result = Helpers\Payment\PayPal::verifyIPN( $request,  Helpers\Theme\Theme::conf('paypal', 'mode', 'sandbox' ) === 'sandbox' );
 
     if ( is_wp_error ( $result ) ) {
         return $result;
@@ -253,19 +253,19 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
         return new WP_Error( 'ipn_not_complete_payment', 'Payment not completed! -> ' . $request->get_param('payment_status' ) , array( 'status' => 200 ) );
     }
     
-    if ( strcmp( $request->get_param('receiver_email'), Helpers\Theme::conf('paypal', 'receiver_email') )  !== 0 ){
+    if ( strcmp( $request->get_param('receiver_email'), Helpers\Theme\Theme::conf('paypal', 'receiver_email') )  !== 0 ){
         return new WP_Error( 'ipn_wrong_receiver_email', 'Wrong receiver email: ' . $request->get_param('receiver_email') , array( 'status' => 200 ) );        
     }
     
-    if ( floatval( $request->get_param('mc_gross') ) !== floatval( Helpers\Theme::conf('subscription_price') ) ){
+    if ( floatval( $request->get_param('mc_gross') ) !== floatval( Helpers\Theme\Theme::conf('subscription_price') ) ){
         return new WP_Error( 'ipn_price_mismatch', 'Price mismatch: ' . $request->get_param('mc_gross') , array( 'status' => 200 ) );
     }     
     
-    if ( strcmp( $request->get_param('mc_currency'), Helpers\Theme::conf('paypal', 'currency') )  !== 0 ){
+    if ( strcmp( $request->get_param('mc_currency'), Helpers\Theme\Theme::conf('paypal', 'currency') )  !== 0 ){
         return new WP_Error( 'ipn_currency_mismatch', 'Currency mismatch: ' . $request->get_param('mc_currency') , array( 'status' => 200 ) );
     }     
     
-    if ( strcmp( $request->get_param('item_number'), Helpers\Theme::conf( 'subscription_item' ) )  !== 0 ){
+    if ( strcmp( $request->get_param('item_number'), Helpers\Theme\Theme::conf( 'subscription_item' ) )  !== 0 ){
         return new WP_Error( 'ipn_wrong_item_number', 'Wrong item number: ' .  $request->get_param('item_number') , array( 'status' => 200 ) );
     }           
     
@@ -347,10 +347,10 @@ if ( !function_exists('wp_new_user_notification') ) {
      
         try {
 
-            $mandrill = new Helpers\Mandrill( Helpers\Theme::conf('mailing', 'md_apikey') );
+            $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
             
             $results = $mandrill->messages->sendTemplate('wp-new-user', array(), array_merge_recursive(
-                Helpers\Mandrill::$messageDefaults,
+                Helpers\Mailing\Mandrill::$messageDefaults,
                 array(
                     'to' => array(
                         array(
@@ -360,7 +360,7 @@ if ( !function_exists('wp_new_user_notification') ) {
                         )
                     ),
                     'subject' => sprintf ( __('Your account details at %s', 'svbk-privatearea'), get_bloginfo( 'name' ) ),
-                    'global_merge_vars' => Helpers\Mandrill::castMergeTags(
+                    'global_merge_vars' => Helpers\Mailing\Mandrill::castMergeTags(
                         array(
                             'USERNAME' => $user->user_login,
                             'USER_EMAIL' => $user->user_email,
