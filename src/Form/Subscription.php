@@ -20,13 +20,13 @@ class Subscription extends Helpers\Form\Submission {
         
         $this->inputFields = 
             array(
-                'last_name' => array( 
+                'first_name' => array( 
                     'required' => true,
                     'label' => __('First Name', 'svbk-privatearea'), 
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'error' => __('Please enter first name', 'svbk-privatearea')
                 ),
-                'first_name' => array( 
+                'last_name' => array( 
                     'required' => true,
                     'label' => __('Last Name', 'svbk-privatearea'), 
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
