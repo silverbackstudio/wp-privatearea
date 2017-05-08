@@ -186,7 +186,7 @@ function svbk_user_register_create_profile( $user_id, $profile_meta = array() ){
     return $profile;
 }
 
-add_action( 'profile_update', 'svbk_ser_update_mc', 10, 2 );
+add_action( 'profile_update', 'svbk_user_update_mc', 10, 2 );
 
 function svbk_user_update_mc( $user_id, $old_user_data ){
     
