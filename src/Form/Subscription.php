@@ -1,10 +1,10 @@
 <?php
 namespace Svbk\WP\Plugins\PrivateArea\Form;
 
-use Svbk\WP\Helpers\Form\Submission;
+use Svbk\WP\Helpers;
 use Svbk\WP\Plugins\PrivateArea;
 
-class Subscription extends Submission {
+class Subscription extends Helpers\Form\Submission {
 
     public $field_prefix = 'subms';
     public $action = 'svbk_subscription';
@@ -75,6 +75,9 @@ class Subscription extends Submission {
                 'billing_country' => array( 
                     'required' => true,
                     'label' => __('Country', 'svbk-privatearea'), 
+                    'choices' => Helpers\Lists\Places::countries(),
+                    'type' => 'select',  
+                    'class' => array('select2'),
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'error' => __('Invalid country', 'svbk-privatearea')
                 ),                  

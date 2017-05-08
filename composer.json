@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "silverbackstudio/wp-themehelper": "^1.1",
+        "silverbackstudio/wp-themehelper": "^1.1.4",
         "silverbackstudio/wp-shortcakes": "^3.0"
     },
     "autoload": {
