@@ -242,6 +242,10 @@ function svbk_register_new_payment_webhook( WP_REST_Request $request ) {
  
         $paypal = new Helpers\Payment\PayPal( Helpers\Theme\Theme::conf('paypal') );
         
+        $logger = new Helpers\Log\Email;
+        $logger->defaultSubject = 'PayPal Webhook'; 
+        $paypal->setLogger( $logger );
+        
         $result = $paypal->verifyWebhook( $request, Helpers\Theme\Theme::conf('paypal', 'webhook_id') );
         
         if( is_wp_error($result) ){
@@ -256,7 +260,13 @@ function svbk_register_new_payment_webhook( WP_REST_Request $request ) {
 
 function svbk_register_new_payment_ipn( WP_REST_Request $request ){
 
-    $result = Helpers\Payment\PayPal::verifyIPN( $request,  Helpers\Theme\Theme::conf('paypal', 'mode', 'sandbox' ) === 'sandbox' );
+    $paypal = new Helpers\Payment\PayPal( Helpers\Theme\Theme::conf('paypal') );
+
+    $logger = new Helpers\Log\Email;
+    $logger->defaultSubject = 'PayPal IPN'; 
+    $paypal->setLogger( $logger );
+
+    $result = $paypal->verifyIPN( $request );
 
     if ( is_wp_error ( $result ) ) {
         return $result;
@@ -367,14 +377,19 @@ if ( !function_exists('wp_new_user_notification') ) {
      
         $switched_locale = switch_to_locale( get_user_locale( $user ) );
      
+        $logger = new Helpers\Log\Email; 
+        $logger->defaultSubject = 'Mandrill Send Log';
+     
         try {
 
             $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
-            $member = new PrivateArea\Member( $user_id );
+            $member = new PrivateArea\Member( $user );
             
-            if( $member->get_type() ){
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . $member->get_type() );
-            } else{
+            if( in_array( PrivateArea\ACL::ROLE_MEMBER, $user->roles ) ){
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . ACL::ROLE_MEMBER );
+            } elseif( in_array( PrivateArea\ACL::ROLE_SUPPORTER, $user->roles ) ){
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . ACL::ROLE_SUPPORTER );
+            } else {
                 $template = 'wp-new-user';
             }
             
@@ -415,11 +430,11 @@ if ( !function_exists('wp_new_user_notification') ) {
             $errors = $mandrill->getResponseErrors($results);    
             
             foreach($errors as $error){
-                wp_mail( 'meniconi.brando@gmail.com', 'Mandrill Email Error', $error );
+                $logger->error($error);
             }            
         
         } catch(Mandrill_Error $e) {
-            wp_mail( 'meniconi.brando@gmail.com', 'Mandrill Email Fatal Error',  $e->getMessage() );
+            $logger->critical( $e->getMessage() );
         }       
      
         if ( $switched_locale ) {
