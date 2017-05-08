@@ -412,10 +412,14 @@ if ( !function_exists('wp_new_user_notification') ) {
                 throw new Mandrill_Error( __('The requesto to our mail server failed, please try again later or contact the site owner.', 'svbk-helpers') );
             } 
             
-            $errors = $mandrill->getResponseErrors($results);            
+            $errors = $mandrill->getResponseErrors($results);    
+            
+            foreach($errors as $error){
+                wp_mail( 'meniconi.brando@gmail.com', 'Mandrill Email Error', $error );
+            }            
         
         } catch(Mandrill_Error $e) {
-            wp_die( $e->getMessage() );
+            wp_mail( 'meniconi.brando@gmail.com', 'Mandrill Email Fatal Error',  $e->getMessage() );
         }       
      
         if ( $switched_locale ) {
@@ -435,3 +439,37 @@ function svbk_privatearea_login_page( $login_url, $redirect, $force_reauth ) {
     }
     return $login_url;
 }
+
+
+function svbk_privatearea_customizer( $wp_customize ){
+	//Private Area
+	$wp_customize->add_section( 'private-area', array(
+	  'title' => __( 'Private Area', 'propertymanagers' ),
+	  'description' => __( 'Private Area', 'propertymanagers' ),
+	  'priority' => 180,
+	) );
+	
+	$wp_customize->add_setting( 'private_area_home', array(
+	  'default' => false,
+	));
+
+	$wp_customize->add_control( 'private_area_home', array(
+	  'label' => __( 'Home Page', 'propertymanagers' ),
+	  'description' => __( 'Select the main Private Area page', 'propertymanagers' ),
+	  'section' => 'private-area',
+	  'type' => 'number',
+	));	
+	
+	$wp_customize->add_setting( 'private_area_profile', array(
+	  'default' => false,
+	));
+
+	$wp_customize->add_control( 'private_area_profile', array(
+	  'label' => __( 'Profile Page', 'propertymanagers' ),
+	  'description' => __( 'Select the Private Area profile page', 'propertymanagers' ),
+	  'section' => 'private-area',
+	  'type' => 'number',
+	));		
+
+}
+add_action( 'customize_register', 'svbk_privatearea_customizer' );
