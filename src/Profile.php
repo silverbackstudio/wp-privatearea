@@ -15,6 +15,7 @@ class Profile {
     const DATE_FIELD = 'subscription_date';
     const EXPIRE_FIELD = 'subscription_expire_date';
     const MEMBER_SINCE_FIELD = 'member_since';
+    const DATE_FORMAT_SAVE = 'Ymd';
 
     public function __construct( $profile_id ){
         $this->set_id( $profile_id );
@@ -62,8 +63,11 @@ class Profile {
     }    
     
     public function completed(){
-        $complete = count( $this->data );
-        $current = count( array_filter( $this->data ) );
+        
+        $all_meta = get_post_meta( $this->id() );
+        
+        $complete = 20;
+        $current = count ( $all_meta );
         return $current / $complete;
     }
     
@@ -115,6 +119,25 @@ class Profile {
         return $apartments;
     }
     
+    public function set_subscription_date( DateTime $date ){
+        
+        update_field(self::EXPIRE_FIELD, $value, $this->id());
+    }
+    
+    public function set_expire( DateTime $date ){
+        
+        $value = $date->format(self::DATE_FORMAT_SAVE);
+        
+        return update_field(self::EXPIRE_FIELD, $value, $this->id());
+    }    
+    
+    public function set_subscribe_date( DateTime $date ){
+        
+        $value = $date->format(self::DATE_FORMAT_SAVE);
+        
+        return update_field(self::DATE_FIELD, $value, $this->id());
+    }        
+    
     public function subscription_expires(){
         $raw = $this->meta( self::EXPIRE_FIELD, true, false );
     
@@ -152,16 +175,22 @@ class Profile {
         return $expiration > $limit;
     }
     
-    public function subscription_expire_eta(){
+    public function subscription_expire_eta( $format = null ){
+        
         $expires = $this->subscription_expires();
         
         if(null === $expires){
-            return null;
+            $eta = null;
+        } else {
+            $now = new DateTime();
+            $eta = $now->diff( $expires );
         }
-
-        $now = new DateTime();
-
-        return $now->diff( $expires );
+        
+        if( $eta && $format ){
+            return $eta->format( $format );
+        } else {
+            return $eta;
+        }          
     }
     
     public static function rent_types(){

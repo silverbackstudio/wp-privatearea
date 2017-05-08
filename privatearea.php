@@ -288,7 +288,7 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
         return new WP_Error( 'ipn_wrong_receiver_email', 'Wrong receiver email: ' . $request->get_param('receiver_email') , array( 'status' => 200 ) );        
     }
     
-    if ( floatval( $request->get_param('mc_gross') ) !== floatval( Helpers\Theme\Theme::conf('subscription_price') ) ){
+    if ( floatval( $request->get_param('mc_gross') ) !== floatval( Helpers\Theme\Theme::conf('subscription', 'price') ) ){
         return new WP_Error( 'ipn_price_mismatch', 'Price mismatch: ' . $request->get_param('mc_gross') , array( 'status' => 200 ) );
     }     
     
@@ -296,7 +296,7 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
         return new WP_Error( 'ipn_currency_mismatch', 'Currency mismatch: ' . $request->get_param('mc_currency') , array( 'status' => 200 ) );
     }     
     
-    if ( strcmp( $request->get_param('item_number'), Helpers\Theme\Theme::conf( 'subscription_item' ) )  !== 0 ){
+    if ( strcmp( $request->get_param('item_number'), Helpers\Theme\Theme::conf( 'subscription', 'paypal_item' ) )  !== 0 ){
         return new WP_Error( 'ipn_wrong_item_number', 'Wrong item number: ' .  $request->get_param('item_number') , array( 'status' => 200 ) );
     }           
     
@@ -319,6 +319,19 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
     }
   
     $profile->set_type( PrivateArea\ACL::ROLE_MEMBER );
+    $member->set_type( PrivateArea\ACL::ROLE_MEMBER );
+    
+    $paymentDate = $paypal->parseDate( $request->get_param('payment_date') );
+
+    if( !$paymentDate ) {
+        $paymentDate = new DateTime('NOW');
+    }
+
+    $profile->set_subscribe_date( $paymentDate );
+
+    $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'duration') ) );
+    $profile->set_expire( $paymentDate );
+        
     $member->set_type( PrivateArea\ACL::ROLE_MEMBER );
 
     add_post_meta( $profile->id(), 'svbk_last_transaction_id', $request->get_param('txn_id'), true );
@@ -386,9 +399,9 @@ if ( !function_exists('wp_new_user_notification') ) {
             $member = new PrivateArea\Member( $user );
             
             if( in_array( PrivateArea\ACL::ROLE_MEMBER, $user->roles ) ){
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . ACL::ROLE_MEMBER );
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_MEMBER );
             } elseif( in_array( PrivateArea\ACL::ROLE_SUPPORTER, $user->roles ) ){
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . ACL::ROLE_SUPPORTER );
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_SUPPORTER );
             } else {
                 $template = 'wp-new-user';
             }
@@ -403,6 +416,8 @@ if ( !function_exists('wp_new_user_notification') ) {
                         'type' => 'to'
                         )
                     ),
+                    'from_email' => Helpers\Theme\Theme::conf('mailing', 'from_email'),
+                    'from_name' => Helpers\Theme\Theme::conf('mailing', 'from_name'),                    
                     'subject' => sprintf ( __('Your account details at %s', 'svbk-privatearea'), get_bloginfo( 'name' ) ),
                     'global_merge_vars' => Helpers\Mailing\Mandrill::castMergeTags(
                         array(
@@ -434,6 +449,9 @@ if ( !function_exists('wp_new_user_notification') ) {
             }            
         
         } catch(Mandrill_Error $e) {
+            
+            
+            
             $logger->critical( $e->getMessage() );
         }       
      

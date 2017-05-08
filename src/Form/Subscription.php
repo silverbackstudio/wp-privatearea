@@ -3,6 +3,8 @@ namespace Svbk\WP\Plugins\PrivateArea\Form;
 
 use Svbk\WP\Helpers;
 use Svbk\WP\Plugins\PrivateArea;
+use DateTime;
+use DateInterval;
 
 class Subscription extends Helpers\Form\Submission {
 
@@ -76,6 +78,7 @@ class Subscription extends Helpers\Form\Submission {
                     'required' => true,
                     'label' => __('Country', 'svbk-privatearea'), 
                     'choices' => Helpers\Lists\Places::countries(),
+                    'default' => 'IT',
                     'type' => 'select',  
                     'class' => array('select2'),
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -139,6 +142,12 @@ class Subscription extends Helpers\Form\Submission {
         $profile = svbk_user_register_create_profile($user_id, $profile_meta);
         $member->set_profile( $profile );
         
+        $paymentDate = new DateTime('NOW');
+        $profile->set_subscribe_date( $paymentDate );  
+        
+        $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'trial') ) );
+        $profile->set_expire( $paymentDate );        
+
         $this->createdUser = $member->id();
         
     }    
