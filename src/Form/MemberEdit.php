@@ -83,7 +83,7 @@ class MemberEdit extends Subscription {
             'meta_input' => array(
                 'billing_company' => $this->getInput( 'billing_company' ), 
                 'billing_first_name' => $this->getInput( 'billing_first_name' ),
-                'billing_last_name' => $this->getInput( 'billing_first_name' ),
+                'billing_last_name' => $this->getInput( 'billing_last_name' ),
                 'billing_code' => $this->getInput( 'billing_code' ),
                 'billing_address_1' => $this->getInput( 'billing_address_1' ),
                 'billing_postcode' => $this->getInput( 'billing_postcode' ),
