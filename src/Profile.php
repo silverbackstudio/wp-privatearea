@@ -66,8 +66,8 @@ class Profile {
         
         $all_meta = get_post_meta( $this->id() );
         
-        $complete = 20;
-        $current = count ( $all_meta );
+        $complete = 18;
+        $current = count ( array_filter( $all_meta ) );
         return $current / $complete;
     }
     
