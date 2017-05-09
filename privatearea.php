@@ -506,3 +506,9 @@ function svbk_privatearea_customizer( $wp_customize ){
 
 }
 add_action( 'customize_register', 'svbk_privatearea_customizer' );
+
+function svbk_privatearea_show_admin_bar(){
+	return current_user_can( 'edit_posts' );
+}
+
+add_filter( 'show_admin_bar' , 'svbk_privatearea_show_admin_bar');
