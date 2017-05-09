@@ -12,6 +12,7 @@ class Subscription extends Helpers\Form\Submission {
     public $action = 'svbk_subscription';
     
     public $createdUser;
+    public $userRole;
     
     public function setInputFields( $fields=array(), $set_local = true){
         
@@ -106,17 +107,26 @@ class Subscription extends Helpers\Form\Submission {
         
     }     
     
-    protected function mainAction(){
-    
-        $user_id = register_new_user( sanitize_user( $this->getInput('user_email') ) , $this->getInput('user_email') );
-    
-        if( is_wp_error( $user_id ) ){
-            $this->addError( $user_id->get_error_message(), 'user_email' );
-            return;
+    public function user_default_role( $role ){
+        
+        if( $this->userRole ) {
+            return $this->userRole;
         }
+        
+        return $role;
+    }
     
-        $member = new PrivateArea\Member( $user_id );
-        $member->set_type( PrivateArea\ACL::ROLE_SUPPORTER );
+    protected function mainAction(){
+
+        remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
+
+        $member = PrivateArea\Member::register_new( sanitize_user( $this->getInput('user_email') ) , $this->getInput('user_email') );
+        
+        if( is_wp_error( $member ) ){
+            $this->addError( $member->get_error_message(), 'user_email' );
+            return;
+        }        
+        
         $member->set_meta( 'first_name', $this->getInput('first_name' ) );
         $member->set_meta( 'last_name', $this->getInput('last_name' ) );
     
@@ -139,14 +149,16 @@ class Subscription extends Helpers\Form\Submission {
             )
         );
     
-        $profile = svbk_user_register_create_profile($user_id, $profile_meta);
-        $member->set_profile( $profile );
-        
+        $profile = svbk_user_register_create_profile($member->id(), $profile_meta);
+        $profile->set_type( PrivateArea\ACL::ROLE_SUPPORTER );
+
         $paymentDate = new DateTime('NOW');
         $profile->set_subscribe_date( $paymentDate );  
         
         $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'trial') ) );
         $profile->set_expire( $paymentDate );        
+
+        wp_send_new_user_notifications( $member->id() );
 
         $this->createdUser = $member->id();
         

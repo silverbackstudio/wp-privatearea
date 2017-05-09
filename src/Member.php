@@ -10,6 +10,8 @@ class Member {
     protected $user;
     protected $profile;
 
+    public static $default_role;
+
     const PROFILE_FIELD = 'member_profile';
     const BUSINESS_ROLE_FIELD = 'business_role';
     const PROFILE_PICTURE_FIELD = 'custom_avatar';
@@ -17,6 +19,29 @@ class Member {
     public static function current(){
         return new self( wp_get_current_user() );
     }
+    
+    public static function register_new( $username, $email, $type = ACL::ROLE_SUPPORTER ){
+        
+        $user_id = register_new_user( $username , $email );
+    
+        if( is_wp_error( $user_id ) ){
+            return $user_id;
+        }        
+        
+        $member = new self( $user_id );
+        $member->set_type( $type );
+        
+        return $member;
+    }
+    
+    public function user_default_role( $role ){
+        
+        if( $this->userRole ) {
+            return $this->userRole;
+        }
+        
+        return $role;
+    }    
     
     public function __construct( $user ){
         

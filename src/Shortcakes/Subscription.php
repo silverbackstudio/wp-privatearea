@@ -18,6 +18,7 @@ class Subscription extends Base {
     public $action = 'svbk_subscribe';
     
     public $redirectToPayment = true;
+    public $userRole;
     
     public $classes = array( 'form-privatearea-subscribe' );
     
@@ -48,7 +49,7 @@ class Subscription extends Base {
         $form = parent::getForm($set_send_params);
     
         if($set_send_params) {
-            $form->redirectToPayment = $this->redirectToPayment;
+            $form->userRole = $this->userRole;
         }
         
         return $form;
@@ -58,7 +59,7 @@ class Subscription extends Base {
         
         $response = json_decode( parent::formatResponse($errors, $form), true );
         
-        if( $form->redirectToPayment && empty( $errors ) && $form->createdUser){
+        if( $this->redirectToPayment && empty( $errors ) && $form->createdUser){
             $response['redirect'] = Helpers\Payment\PayPal::buttonUrl( 
                 Helpers\Theme\Theme::conf('paypal', 'button_id'), 
                 array( 

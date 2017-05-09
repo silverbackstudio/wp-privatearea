@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: SilverbackStudio Member Private Area\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-08 18:05+0000\n"
-"PO-Revision-Date: 2017-05-08 18:07+0000\n"
+"PO-Revision-Date: 2017-05-09 10:20+0000\n"
 "Last-Translator: Silverback Studio <webmaster@silverbackstudio.it>\n"
 "Language-Team: Italian\n"
 "Language: it-IT\n"
@@ -79,7 +79,7 @@ msgstr "Società di %s"
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:421
 #, php-format
 msgid "Your account details at %s"
-msgstr "I dettagli settagli del tuo account su %s"
+msgstr "I dettagli del tuo account su %s"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:17
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:25

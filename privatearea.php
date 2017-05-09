@@ -397,10 +397,12 @@ if ( !function_exists('wp_new_user_notification') ) {
 
             $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
             $member = new PrivateArea\Member( $user );
+        
+            $type = $member->get_type();
             
-            if( in_array( PrivateArea\ACL::ROLE_MEMBER, $user->roles ) ){
+            if( PrivateArea\ACL::ROLE_MEMBER === $type ){
                 $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_MEMBER );
-            } elseif( in_array( PrivateArea\ACL::ROLE_SUPPORTER, $user->roles ) ){
+            } elseif( PrivateArea\ACL::ROLE_SUPPORTER === $type ){
                 $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_SUPPORTER );
             } else {
                 $template = 'wp-new-user';
@@ -449,9 +451,6 @@ if ( !function_exists('wp_new_user_notification') ) {
             }            
         
         } catch(Mandrill_Error $e) {
-            
-            
-            
             $logger->critical( $e->getMessage() );
         }       
      
