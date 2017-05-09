@@ -337,6 +337,58 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
     add_post_meta( $profile->id(), 'svbk_last_transaction_id', $request->get_param('txn_id'), true );
     add_post_meta( $profile->id(), 'svbk_last_payer_id', $request->get_param('payer_id'), true );
     add_post_meta( $profile->id(), 'svbk_last_payer_email', $request->get_param('payer_email'), true );
+    
+    try {
+    
+        $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
+        $member = new PrivateArea\Member( $user );
+    
+        $type = $member->get_type();
+    
+        $results = $mandrill->messages->sendTemplate(Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_MEMBER ), array(), array_merge_recursive(
+            Helpers\Mailing\Mandrill::$messageDefaults,
+            array(
+                'to' => array(
+                    array(
+                    'email' => $member->meta('user_email'),
+                    'name' => $member->meta('display_name'),
+                    'type' => 'to'
+                    )
+                ),
+                'from_email' => Helpers\Theme\Theme::conf('mailing', 'from_email'),
+                'from_name' => Helpers\Theme\Theme::conf('mailing', 'from_name'),                    
+                //'subject' => sprintf ( __('Your account details at %s', 'svbk-privatearea'), get_bloginfo( 'name' ) ),
+                'global_merge_vars' => Helpers\Mailing\Mandrill::castMergeTags(
+                    array(
+                        'FNAME' => $member->meta('first_name'),
+                        'LNAME' => $member->meta('last_name'),
+                        'HOME_URL' => home_url( '/' ),
+                        'PRIVATEAREA_URL' => get_permalink( get_theme_mod('private_area_home') ),
+                        'SET_PASSWORD_URL' => wp_lostpassword_url( get_permalink( get_theme_mod('private_area_home') ) ),
+                    )
+                ),
+                'metadata' => array(
+                    'website' => home_url( '/' )
+                ),
+                'merge' =>true,
+                'tags' => array('wp-new-user'),
+            )
+        ) );
+        
+        if( !is_array($results) || !isset($results[0]['status']) ){
+            throw new Mandrill_Error( __('The requesto to our mail server failed, please try again later or contact the site owner.', 'svbk-helpers') );
+        } 
+        
+        $errors = $mandrill->getResponseErrors($results);    
+        
+        foreach($errors as $error){
+            $logger->error($error);
+        }            
+    
+    } catch(Mandrill_Error $e) {
+        $logger->critical( $e->getMessage() );
+    }       
+         
 
     return;
 
@@ -344,7 +396,9 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
 
 if ( !function_exists('wp_new_user_notification') ) {
     
-    function wp_new_user_notification( $user_id, $deprecated = null, $notify = '' ) {
+    function wp_new_user_notification( $user_id, $type = null, $notify = '' ) {
+
+        $deprecated = null;
         
         if ( $deprecated !== null ) {
             _deprecated_argument( __FUNCTION__, '4.3.1' );
@@ -369,7 +423,7 @@ if ( !function_exists('wp_new_user_notification') ) {
                 restore_previous_locale();
             }
         }
-     
+    
         // `$deprecated was pre-4.3 `$plaintext_pass`. An empty `$plaintext_pass` didn't sent a user notification.
         if ( 'admin' === $notify || ( empty( $deprecated ) && empty( $notify ) ) ) {
             return;
@@ -398,14 +452,14 @@ if ( !function_exists('wp_new_user_notification') ) {
             $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
             $member = new PrivateArea\Member( $user );
         
-            $type = $member->get_type();
+            if(! $type ) {
+                $type = $member->get_type();
+            }
             
-            if( PrivateArea\ACL::ROLE_MEMBER === $type ){
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_MEMBER );
-            } elseif( PrivateArea\ACL::ROLE_SUPPORTER === $type ){
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_SUPPORTER );
+            if( $type && Helpers\Theme\Theme::conf('mailing', 'template_new_user_' . $type ) ) {
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_user_' . $type );
             } else {
-                $template = 'wp-new-user';
+                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_user_default' );
             }
             
             $results = $mandrill->messages->sendTemplate($template, array(), array_merge_recursive(

@@ -48,9 +48,7 @@ class Subscription extends Base {
         
         $form = parent::getForm($set_send_params);
     
-        if($set_send_params) {
-            $form->userRole = $this->userRole;
-        }
+        $form->userRole = $this->userRole;
         
         return $form;
     }    

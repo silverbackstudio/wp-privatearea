@@ -107,15 +107,6 @@ class Subscription extends Helpers\Form\Submission {
         
     }     
     
-    public function user_default_role( $role ){
-        
-        if( $this->userRole ) {
-            return $this->userRole;
-        }
-        
-        return $role;
-    }
-    
     protected function mainAction(){
 
         remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
@@ -158,7 +149,7 @@ class Subscription extends Helpers\Form\Submission {
         $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'trial') ) );
         $profile->set_expire( $paymentDate );        
 
-        wp_send_new_user_notifications( $member->id() );
+        wp_new_user_notification( $member->id(), $this->userRole, 'both' );
 
         $this->createdUser = $member->id();
         
