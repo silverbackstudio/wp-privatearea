@@ -2,58 +2,38 @@
 
 namespace Svbk\WP\Plugins\PrivateArea\Shortcakes;
 
-use WP_Query;
-use Svbk\WP\Helpers;
 use Svbk\WP\Plugins\PrivateArea;
-use Svbk\WP\Shortcakes\Forms\Form as Base;
+use Svbk\WP\Shortcakes;
 
-class MemberEdit extends Base {
+class MemberEdit extends Shortcakes\Forms\ACF {
     
-    public $renderOrder = array(
-        'wrapperBegin',
-        'openButton',  
-        'hiddenBegin',
-        'closeButton',
-        'hiddenContentBegin',
-    	'formBegin',
-    	'title',
-    	'input',
-        'requiredNotice',
-        'submitButton',
-        'messages',
-        'formEnd',
-        'hiddenContentEnd',
-        'hiddenEnd',
-        'wrapperEnd',
-    );    
-    
-    public $shortcode_id = 'member_edit';
-    public $field_prefix = 'medit';    
-    public $action = 'svbk_member_edit';
-    
-    public $classes = array( 'form-privatearea-subscribe', 'form-privatearea-member-edit' );
-    
-    public $formClass = '\Svbk\WP\Plugins\PrivateArea\Form\MemberEdit';
+    public $shortcode_id = 'user_edit';
 
     public function title(){
-        return __('Member Edit Form', 'svbk-privatearea');
+        return __('User Edit Form', 'svbk-privatearea');
     }
     
-    public function confirmMessage(){
-        return $this->confirmMessage ?: __('Your informations have been updated', 'svbk-privatearea');
-    }    
-    
-    public function fields(){
-        return array(
-        		array(
-        			'label'  => esc_html__( 'Submit Button Label', 'svbk-privatearea' ),
-        			'attr'   => 'submit_button_label',
-        			'type'   => 'text',
-        			'encode' => true,
-        			'description' => esc_html__( 'Submit Button label text', 'svbk-privatearea' ),
-        		),
+    public function shortcode_atts( $defaults, $attr=array(), $shortcode_tag='' ){
+        
+        $attr = parent::shortcode_atts($defaults, $attr, $shortcode_tag);
+        
+        $member = PrivateArea\Member::current();
+
+        if( $member ) {
+            $attr['post_id'] = 'user_' . $member->id();
+        } 
+        
+        $attr['fields'] = wp_filter_object_list( 
+            acf_get_fields( $attr['field_groups'] ), 
+            array( 
+                'name' => PrivateArea\Member::PROFILE_FIELD 
+            ), 
+            'NOT',
+            'key'
         );
+        
+        return $attr;
+        
     }
-    
-    
+
 }

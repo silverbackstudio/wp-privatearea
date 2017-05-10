@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-08 18:05+0000\n"
+"POT-Creation-Date: 2017-05-10 16:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Business of %s"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:421
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:477
 #, php-format
 msgid "Your account details at %s"
 msgstr ""
@@ -72,22 +72,12 @@ msgstr ""
 msgid "How many members to show"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:39
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/ProfileEdit.php:13
 msgid "Member Edit Form"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:43
-msgid "Your informations have been updated"
-msgstr ""
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:49
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:37
-msgid "Submit Button Label"
-msgstr ""
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:53
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:41
-msgid "Submit Button label text"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:13
+msgid "User Edit Form"
 msgstr ""
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:18
@@ -99,12 +89,12 @@ msgid "Member Field"
 msgstr ""
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:32
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:25
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:26
 msgid "First Name"
 msgstr ""
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:33
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:31
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:32
 msgid "Last Name"
 msgstr ""
 
@@ -116,117 +106,115 @@ msgstr ""
 msgid "Member Type"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:27
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:28
 msgid "Subscription Form"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:31
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:32
 msgid "Thanks for your request, we will reply as soon as possible."
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/MemberEdit.php:22
-msgid "Company First Name"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:38
+msgid "Submit Button Label"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/MemberEdit.php:24
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:27
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:42
+msgid "Submit Button label text"
+msgstr ""
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:28
 msgid "Please enter first name"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/MemberEdit.php:28
-msgid "Company Last Name"
-msgstr ""
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/MemberEdit.php:30
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:33
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:34
 msgid "Please enter last name"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:37
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:38
 msgid "Email Address"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:39
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:40
 msgid "Invalid email address"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:43
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:44
 msgid "Company Name"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:45
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:46
 msgid "Please enter your company name"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:49
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:50
 msgid "VAT ID / SSN"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:51
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:52
 msgid "Please enter your fiscal code or VAT ID"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:55
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:56
 msgid "Address"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:57
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:58
 msgid "Please enter valid address"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:61
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:62
 msgid "ZipCode"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:63
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:64
 msgid "Invalid zipcode"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:67
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:68
 msgid "City"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:69
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:70
 msgid "Invalid city"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:73
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:74
 msgid "State/Province"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:75
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:76
 msgid "Invalid state/province"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:79
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:80
 msgid "Country"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:85
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:86
 msgid "Invalid country"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:89
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:90
 msgid "Phone"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:91
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:92
 msgid "Invalid phone number"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:95
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:96
 msgid "Mobile"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:97
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:98
 msgid "Invalid mobile number"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:101
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:102
 msgid "Website"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:103
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:104
 msgid "Invalid website"
 msgstr ""
 

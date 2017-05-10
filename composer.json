@@ -10,7 +10,7 @@
     ],
     "require": {
         "silverbackstudio/wp-themehelper": "^1.1.5",
-        "silverbackstudio/wp-shortcakes": "^3.0"
+        "silverbackstudio/wp-shortcakes": "^3.1.1"
     },
     "autoload": {
         "psr-4": {"Svbk\\WP\\Plugins\\PrivateArea\\": "src/"}
