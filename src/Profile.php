@@ -176,7 +176,7 @@ class Profile {
           $limit->sub( new DateInterval($interval) );
         } 
         
-        return $expiration > $limit;
+        return $limit > $expiration;
     }
     
     public function subscription_expire_eta( $format = null ){
