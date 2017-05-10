@@ -64,10 +64,14 @@ class Profile {
     
     public function completed(){
         
-        $all_meta = get_post_meta( $this->id() );
+        $all_meta = get_fields( $this->id() );
+        $fields = acf_get_fields( 'group_5902fef56f38f' ) ;
         
-        $complete = 18;
-        $current = count ( array_filter( $all_meta ) );
+        $complete = count( $fields );
+        
+        $filled = array_intersect_key($all_meta, wp_list_pluck($fields, 'key', 'name'));
+        
+        $current = count ( array_filter( $filled ) );
         return $current / $complete;
     }
     
