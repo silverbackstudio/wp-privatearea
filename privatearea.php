@@ -565,3 +565,14 @@ function svbk_privatearea_show_admin_bar(){
 }
 
 add_filter( 'show_admin_bar' , 'svbk_privatearea_show_admin_bar');
+
+
+function svbk_privatearea_enable_acf_forms(){
+    
+    if( is_page( get_theme_mod( 'private_area_profile' ) ) ) {
+       acf_form_head(); 
+    }
+    
+}
+
+add_action( 'wp_enqueue_scripts', 'svbk_privatearea_enable_acf_forms' );
