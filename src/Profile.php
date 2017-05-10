@@ -173,10 +173,10 @@ class Profile {
         $limit = new DateTime('NOW'); 
 
         if( $interval ) {
-          $limit->sub( new DateInterval($interval) );
+          $limit->add( new DateInterval($interval) );
         } 
         
-        return $expiration > $limit;
+        return $limit > $expiration;
     }
     
     public function subscription_expire_eta( $format = null ){
