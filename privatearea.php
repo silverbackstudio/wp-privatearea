@@ -640,6 +640,42 @@ function send_email( $template, $args ){
     
 }
 
+function acf_profile_form_labels( $field ) {
+    
+    switch( $field['key'] ){
+        case '_post_title':
+            $field['label'] = __( 'Business Name', 'propertymanagers' );
+            break;
+        case '_post_content':
+            $field['label'] = __( 'Description', 'propertymanagers' );
+            break;
+    }
+
+    return $field;
+}
+
+add_filter('acf/prepare_field/key=_post_title', __NAMESPACE__.'\\acf_profile_form_labels');
+add_filter('acf/prepare_field/key=_post_content', __NAMESPACE__.'\\acf_profile_form_labels');
+
+function acf_member_form_email( $value, $post_id, $field ) {
+    
+    if( ! is_admin() ) {
+        $value = Member::current()->meta('user_email');
+    }
+
+    return $value;
+}
+add_filter('acf/load_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_form_email', 10, 3);
+
+function acf_member_form_email_save( $value, $post_id, $field ) {
+    
+    wp_update_user( array( 'ID'=> (int)str_replace('user_', '', $post_id), 'user_email' => $value ) );
+
+    return '';
+}
+
+add_filter('acf/update_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_form_email_save', 10, 3);
+
 /**
  * Load Global Pluggables
  */
