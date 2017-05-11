@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-10 16:32+0000\n"
+"POT-Creation-Date: 2017-05-11 15:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,40 +14,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:88
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:91
+#, php-format
+msgid "Your account details at %s"
+msgstr ""
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:93
 #, php-format
 msgid "Mailchimp Update Error for user <b>%s</b>: %s."
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:90
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:111
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:95
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:116
 msgid "Please update values manually or subscribe the user to mailchimp list"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:99
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:104
 #, php-format
 msgid "Mailchimp update completed for user %s"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:109
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:114
 #, php-format
 msgid "Mailchimp Create Error for user <b>%s</b>: %s."
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:120
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:125
 #, php-format
 msgid "Mailchimp create completed for user %s"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:178
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:317
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:183
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:322
 #, php-format
 msgid "Business of %s"
 msgstr ""
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:477
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:724
 #, php-format
-msgid "Your account details at %s"
+msgid "%s - E-mail change request"
+msgstr ""
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:747
+msgid "This email address is invalid"
+msgstr ""
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:751
+msgid "This email address already exists"
+msgstr ""
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:763
+#, php-format
+msgid ""
+"Email change request pending. We sent an email to %s, please click on the "
+"link inside to confirm."
 msgstr ""
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:17
