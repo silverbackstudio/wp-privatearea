@@ -19,6 +19,7 @@ use Svbk\WP\Helpers;
 use DateTime;
 use DateInterval;
 use WP_Query;
+use Mandrill_Error;
 
 define('PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT', 60);
 define('PRIVATEAREA_MEMBER_ENDPOINT', 'member/v1' );
@@ -620,7 +621,7 @@ function send_email( $template, $args ){
             $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
 
             $results = $mandrill->messages->sendTemplate($template, array(), $emailArgs);
-            
+
             if( !is_array($results) || !isset($results[0]['status']) ){
                 throw new Mandrill_Error( __('The requesto to our mail server failed, please try again later or contact the site owner.', 'svbk-helpers') );
             } 
@@ -657,24 +658,107 @@ function acf_profile_form_labels( $field ) {
 add_filter('acf/prepare_field/key=_post_title', __NAMESPACE__.'\\acf_profile_form_labels');
 add_filter('acf/prepare_field/key=_post_content', __NAMESPACE__.'\\acf_profile_form_labels');
 
-function acf_member_form_email( $value, $post_id, $field ) {
-    
-    if( ! is_admin() ) {
-        $value = Member::current()->meta('user_email');
-    }
+if( ! is_admin() ){
+    add_filter('acf/load_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_load', 10, 3);
+    add_filter('acf/update_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_update', 10, 3);
+    add_filter('acf/validate_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_validate', 10, 4);
+    add_filter('acf/prepare_field/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_field');
+}
 
+function acf_member_email_load( $value, $post_id, $field ) {
+
+    $user_id = (int)str_replace('user_', '', $post_id);
+    $current_user = wp_get_current_user();
+    
+    if ( isset( $_GET[ 'newuseremail' ] ) && $current_user->ID && ( $user_id === $current_user->ID ) ) {
+	    $new_email = get_user_meta( $current_user->ID, '_new_email', true );
+	    if ( $new_email && hash_equals( $new_email[ 'hash' ], $_GET[ 'newuseremail' ] ) ) {
+    		$user = new \stdClass;
+    		$user->ID = $current_user->ID;
+    		$user->user_email = esc_html( trim( $new_email[ 'newemail' ] ) );
+    		wp_update_user( $user );
+    		delete_user_meta( $current_user->ID, '_new_email' );
+	    }  
+    } 
+    
+    $userdata = get_user_by('ID', $user_id);
+    
+    $value = $userdata->user_email;
+    
     return $value;
 }
-add_filter('acf/load_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_form_email', 10, 3);
 
-function acf_member_form_email_save( $value, $post_id, $field ) {
+function acf_member_email_update( $value, $post_id, $field ) {
+
+    $user_id = (int)str_replace('user_', '', $post_id);
+    $userdata = get_user_by('ID', $user_id);
+
+    if( $userdata->user_email === $value ){
+        return '';
+    }
+
+	$hash = md5( $value . time() . mt_rand() );
+	$new_user_email = array(
+		'hash' => $hash,
+		'newemail' => $value
+	);
+	update_user_meta($user_id, '_new_email', $new_user_email );
+	
+	$changeUrl = get_permalink( get_theme_mod('private_area_profile') );
+	$changeUrl = add_query_arg( 'newuseremail', $hash, $changeUrl );
+	
+	send_email( Helpers\Theme\Theme::conf('mailing', 'template_member_emailreset') , array(
+            'to' => array( 
+                array(
+                    'email' => $value,
+                    'name' => $userdata->first_name . ' ' . $userdata->last_name,
+                    'type' => 'to'
+                )
+            ),
+            'subject' => sprintf ( __('%s - E-mail change request', 'svbk-privatearea'), get_bloginfo( 'name' ) ),
+            'global_merge_vars' => array(
+                'FNAME' => $userdata->first_name,
+                'LNAME' => $userdata->last_name,
+                'NEW_EMAIL' => $value,
+                'EMAIL_CONFIRM_URL' => esc_url( $changeUrl ),
+            ),	
+            'tags' => array( 'wp-member-newemail' )
+	    )
+	);
     
-    wp_update_user( array( 'ID'=> (int)str_replace('user_', '', $post_id), 'user_email' => $value ) );
-
     return '';
 }
 
-add_filter('acf/update_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_form_email_save', 10, 3);
+function acf_member_email_validate( $valid, $value, $field, $input ) {
+
+    $userdata = wp_get_current_user();
+
+    if( ($valid !== true) || ( $userdata->user_email === $value ) ){
+        return $valid;
+    }
+
+    if( ! is_email( $value ) ){
+        return __('This email address is invalid', 'svbk-privatearea');
+    }
+    
+    if( email_exists( $value ) ){
+        return __('This email address already exists', 'svbk-privatearea');
+    }
+
+    return $valid;
+}
+
+function acf_member_email_field( $field ) {
+
+    $userdata = wp_get_current_user();
+    $new_email = get_user_meta( $userdata->ID, '_new_email', true);
+    
+    if( $new_email ){
+        $field['instructions'] = sprintf( __('Email change request pending. We sent an email to %s, please click on the link inside to confirm.', 'svbk-privatearea'), $new_email[ 'newemail' ] );
+    }    
+
+    return $field;
+}
 
 /**
  * Load Global Pluggables
