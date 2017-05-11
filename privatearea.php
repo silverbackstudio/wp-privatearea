@@ -697,6 +697,12 @@ function acf_member_email_update( $value, $post_id, $field ) {
         return '';
     }
 
+    $new_user_email = get_user_meta($user_id, '_new_email', true );
+
+    if( $new_user_email && ($new_user_email['newemail'] === $value) ) {
+        return '';
+    }
+
 	$hash = md5( $value . time() . mt_rand() );
 	$new_user_email = array(
 		'hash' => $hash,
