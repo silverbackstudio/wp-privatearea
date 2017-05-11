@@ -140,7 +140,7 @@ class Subscription extends Helpers\Form\Submission {
             )
         );
     
-        $profile = svbk_user_register_create_profile($member->id(), $profile_meta);
+        $profile = PrivateArea\create_profile($member->id(), $profile_meta);
         $profile->set_type( PrivateArea\ACL::ROLE_SUPPORTER );
 
         $paymentDate = new DateTime('NOW');
@@ -150,6 +150,8 @@ class Subscription extends Helpers\Form\Submission {
         $profile->set_expire( $paymentDate );        
 
         wp_new_user_notification( $member->id(), $this->userRole, 'both' );
+
+        do_action( 'profile_update', $member->id(), get_userdata( $member->id() ) );
 
         $this->createdUser = $member->id();
         

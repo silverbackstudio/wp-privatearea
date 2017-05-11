@@ -13,20 +13,24 @@ Author URI: http://www.silverbackstudio.it/
 Text Domain: svbk-privatearea
 */
 
+namespace Svbk\WP\Plugins\PrivateArea;
+
 use Svbk\WP\Helpers;
-use Svbk\WP\Plugins\PrivateArea;
+use DateTime;
+use DateInterval;
+use WP_Query;
 
 define('PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT', 60);
 define('PRIVATEAREA_MEMBER_ENDPOINT', 'member/v1' );
 
-add_action('switch_theme', array( PrivateArea\ACL::class, 'setup_user_roles') );
-add_action('updated_post_meta', array( PrivateArea\ACL::class, 'reflectOnUser'), 10, 4 );
+add_action('switch_theme', array( ACL::class, 'setup_user_roles') );
+add_action('updated_post_meta', array( ACL::class, 'reflectOnUser'), 10, 4 );
 
-function svbk_privatearea_init() {
+function init() {
   load_plugin_textdomain( 'svbk-privatearea', false, dirname( plugin_basename( __FILE__ ) ). '/languages' ); 
 }
 
-add_action('plugins_loaded', 'svbk_privatearea_init'); 
+add_action('plugins_loaded', __NAMESPACE__.'\\init'); 
 
 function set_admin_notices_transient( $handle, $value ){
     
@@ -41,7 +45,7 @@ function set_admin_notices_transient( $handle, $value ){
     
 }
 
-function svbk_mailchimp_request($email, $data, $update = true){
+function mailchimp_request($email, $data, $update = true){
     
     $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
     $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');
@@ -78,9 +82,9 @@ add_action( 'svbk_member_type_updated', function( $type, $member ) {
 }, 10, 2 );
 
 
-add_action( 'admin_notices', 'svbk_mc_user_update_notices');
+add_action( 'admin_notices', __NAMESPACE__.'\\mc_user_update_notices');
 
-function svbk_mc_user_update_notices() {
+function mc_user_update_notices() {
     
     if ( $errors = get_transient( "svbk_mc_user_update_error" ) ) {  ?>
         <div class="notice notice-error "> 
@@ -126,11 +130,11 @@ function svbk_mc_user_update_notices() {
 
 }  
 
-add_action( 'user_register', 'svbk_user_register_mc' );
+add_action( 'user_register', __NAMESPACE__.'\\user_register_mc' );
 
-function svbk_user_register_mc( $user_id ){
+function user_register_mc( $user_id ){
     
-    $member = new PrivateArea\Member( $user_id );
+    $member = new Member( $user_id );
     $email = $member->meta('user_email');
     
     $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
@@ -158,21 +162,21 @@ function svbk_user_register_mc( $user_id ){
     
 }
 
-//add_action( 'user_register', 'svbk_user_register_create_profile', 9 );
+//add_action( 'user_register', __NAMESPACE__.'\\create_profile', 9 );
 
-function svbk_user_register_create_profile( $user_id, $profile_meta = array() ){
+function create_profile( $user_id, $profile_meta = array() ){
     
     $user = get_userdata( $user_id );
     
-    if( empty( array_intersect( $user->roles, array_keys( PrivateArea\ACL::available_roles() ) ) ) ){
+    if( empty( array_intersect( $user->roles, array_keys( ACL::available_roles() ) ) ) ){
         return;
     }
     
-    $member = new PrivateArea\Member( $user );
+    $member = new Member( $user );
     $profile = $member->profile();
     
     if( empty( $profile ) ){
-        $profile = PrivateArea\Profile::create( 
+        $profile = Profile::create( 
             array_merge(
                 array( 
                     'post_title' => sprintf ( __( 'Business of %s', 'svbk-privatearea'), $member->meta('user_email') ) 
@@ -186,14 +190,14 @@ function svbk_user_register_create_profile( $user_id, $profile_meta = array() ){
     return $profile;
 }
 
-add_action( 'profile_update', 'svbk_user_update_mc', 10, 2 );
+add_action( 'profile_update', __NAMESPACE__.'\\user_update_mc', 10, 2 );
 
-function svbk_user_update_mc( $user_id, $old_user_data ){
+function user_update_mc( $user_id, $old_user_data ){
     
     $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
     $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');      
     
-    $member = new PrivateArea\Member( $user_id );
+    $member = new Member( $user_id );
     
     $old_email = $old_user_data->data->user_email;
     $email = $member->meta('user_email');
@@ -228,17 +232,17 @@ function svbk_user_update_mc( $user_id, $old_user_data ){
 add_action( 'rest_api_init', function () {
   register_rest_route( PRIVATEAREA_MEMBER_ENDPOINT, '/payment/webhook', array(
     'methods' => 'POST',
-    'callback' => 'svbk_register_new_payment_webhook',
+    'callback' => __NAMESPACE__.'\\payment_webhook',
   ) );
   
   register_rest_route( PRIVATEAREA_MEMBER_ENDPOINT, '/payment/ipn', array(
     'methods' => 'POST',
-    'callback' => 'svbk_register_new_payment_ipn',
+    'callback' => __NAMESPACE__.'\\payment_ipn',
   ) );  
 } );
 
 
-function svbk_register_new_payment_webhook( WP_REST_Request $request ) {
+function payment_webhook( WP_REST_Request $request ) {
  
         $paypal = new Helpers\Payment\PayPal( Helpers\Theme\Theme::conf('paypal') );
         
@@ -258,7 +262,7 @@ function svbk_register_new_payment_webhook( WP_REST_Request $request ) {
         
 }
 
-function svbk_register_new_payment_ipn( WP_REST_Request $request ){
+function payment_ipn( WP_REST_Request $request ){
 
     $paypal = new Helpers\Payment\PayPal( Helpers\Theme\Theme::conf('paypal') );
 
@@ -310,16 +314,16 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
       return new WP_Error( 'invalid_member_reference', 'Invalid Member Reference'  , array( 'status' => 200 ) );
     }
     
-    $member = new PrivateArea\Member( $user );
+    $member = new Member( $user );
     $profile = $member->profile();
   
     if( empty( $profile ) ){
-        $profile = PrivateArea\Profile::create( array( 'post_title' => sprintf ( __( 'Business of %s', 'svbk-privatearea'), $member->meta('user_email') ) )  );
+        $profile = Profile::create( array( 'post_title' => sprintf ( __( 'Business of %s', 'svbk-privatearea'), $member->meta('user_email') ) )  );
         $member->set_profile( $profile );
     }
   
-    $profile->set_type( PrivateArea\ACL::ROLE_MEMBER );
-    $member->set_type( PrivateArea\ACL::ROLE_MEMBER );
+    $profile->set_type( ACL::ROLE_MEMBER );
+    $member->set_type( ACL::ROLE_MEMBER );
     
     $paymentDate = $paypal->parseDate( $request->get_param('payment_date') );
 
@@ -332,7 +336,7 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
     $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'duration') ) );
     $profile->set_expire( $paymentDate );
         
-    $member->set_type( PrivateArea\ACL::ROLE_MEMBER );
+    $member->set_type( ACL::ROLE_MEMBER );
 
     add_post_meta( $profile->id(), 'svbk_last_transaction_id', $request->get_param('txn_id'), true );
     add_post_meta( $profile->id(), 'svbk_last_payer_id', $request->get_param('payer_id'), true );
@@ -341,11 +345,11 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
     try {
     
         $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
-        $member = new PrivateArea\Member( $user );
+        $member = new Member( $user );
     
         $type = $member->get_type();
     
-        $results = $mandrill->messages->sendTemplate(Helpers\Theme\Theme::conf('mailing', 'template_new_' . PrivateArea\ACL::ROLE_MEMBER ), array(), array_merge_recursive(
+        $results = $mandrill->messages->sendTemplate(Helpers\Theme\Theme::conf('mailing', 'template_new_' . ACL::ROLE_MEMBER ), array(), array_merge_recursive(
             Helpers\Mailing\Mandrill::$messageDefaults,
             array(
                 'to' => array(
@@ -394,130 +398,9 @@ function svbk_register_new_payment_ipn( WP_REST_Request $request ){
 
 }
 
-if ( !function_exists('wp_new_user_notification') ) {
-    
-    function wp_new_user_notification( $user_id, $type = null, $notify = '' ) {
+add_filter( 'login_url', __NAMESPACE__.'\\login_page', 10, 3 );
 
-        $deprecated = null;
-        
-        if ( $deprecated !== null ) {
-            _deprecated_argument( __FUNCTION__, '4.3.1' );
-        }
-     
-        global $wpdb, $wp_hasher;
-        $user = get_userdata( $user_id );
-     
-        // The blogname option is escaped with esc_html on the way into the database in sanitize_option
-        // we want to reverse this for the plain text arena of emails.
-        $blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-     
-        if ( 'user' !== $notify ) {
-            $switched_locale = switch_to_locale( get_locale() );
-            $message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
-            $message .= sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n";
-            $message .= sprintf( __( 'Email: %s' ), $user->user_email ) . "\r\n";
-     
-            @wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] New User Registration' ), $blogname ), $message );
-     
-            if ( $switched_locale ) {
-                restore_previous_locale();
-            }
-        }
-    
-        // `$deprecated was pre-4.3 `$plaintext_pass`. An empty `$plaintext_pass` didn't sent a user notification.
-        if ( 'admin' === $notify || ( empty( $deprecated ) && empty( $notify ) ) ) {
-            return;
-        }
-     
-        // Generate something random for a password reset key.
-        $key = wp_generate_password( 20, false );
-     
-        /** This action is documented in wp-login.php */
-        do_action( 'retrieve_password_key', $user->user_login, $key );
-     
-        // Now insert the key, hashed, into the DB.
-        if ( empty( $wp_hasher ) ) {
-            $wp_hasher = new PasswordHash( 8, true );
-        }
-        $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-        $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
-     
-        $switched_locale = switch_to_locale( get_user_locale( $user ) );
-     
-        $logger = new Helpers\Log\Email; 
-        $logger->defaultSubject = 'Mandrill Send Log';
-     
-        try {
-
-            $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
-            $member = new PrivateArea\Member( $user );
-        
-            if(! $type ) {
-                $type = $member->get_type();
-            }
-            
-            if( $type && Helpers\Theme\Theme::conf('mailing', 'template_new_user_' . $type ) ) {
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_user_' . $type );
-            } else {
-                $template = Helpers\Theme\Theme::conf('mailing', 'template_new_user_default' );
-            }
-            
-            $results = $mandrill->messages->sendTemplate($template, array(), array_merge_recursive(
-                Helpers\Mailing\Mandrill::$messageDefaults,
-                array(
-                    'to' => array(
-                        array(
-                        'email' => $user->user_email,
-                        'name' => $user->display_name,
-                        'type' => 'to'
-                        )
-                    ),
-                    'from_email' => Helpers\Theme\Theme::conf('mailing', 'from_email'),
-                    'from_name' => Helpers\Theme\Theme::conf('mailing', 'from_name'),                    
-                    'subject' => sprintf ( __('Your account details at %s', 'svbk-privatearea'), get_bloginfo( 'name' ) ),
-                    'global_merge_vars' => Helpers\Mailing\Mandrill::castMergeTags(
-                        array(
-                            'USERNAME' => $user->user_login,
-                            'USER_EMAIL' => $user->user_email,
-                            'FNAME' => $user->first_name,
-                            'LNAME' => $user->last_name,
-                            'HOME_URL' => home_url( '/' ),
-                            'PRIVATEAREA_URL' => get_permalink( get_theme_mod('private_area_home') ),
-                            'SET_PASSWORD_URL' => network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login'),
-                        )
-                    ),
-                    'metadata' => array(
-                        'website' => home_url( '/' )
-                    ),
-                    'merge' =>true,
-                    'tags' => array('wp-new-user'),
-                )
-            ) );
-            
-            if( !is_array($results) || !isset($results[0]['status']) ){
-                throw new Mandrill_Error( __('The requesto to our mail server failed, please try again later or contact the site owner.', 'svbk-helpers') );
-            } 
-            
-            $errors = $mandrill->getResponseErrors($results);    
-            
-            foreach($errors as $error){
-                $logger->error($error);
-            }            
-        
-        } catch(Mandrill_Error $e) {
-            $logger->critical( $e->getMessage() );
-        }       
-     
-        if ( $switched_locale ) {
-            restore_previous_locale();
-        }        
-
-    }
-}
-
-add_filter( 'login_url', 'svbk_privatearea_login_page', 10, 3 );
-
-function svbk_privatearea_login_page( $login_url, $redirect, $force_reauth ) {
+function login_page( $login_url, $redirect, $force_reauth ) {
     $login_page = get_permalink( get_theme_mod('private_area_home') );
     
     if( $login_page ) {
@@ -527,7 +410,7 @@ function svbk_privatearea_login_page( $login_url, $redirect, $force_reauth ) {
 }
 
 
-function svbk_privatearea_customizer( $wp_customize ){
+function customizer( $wp_customize ){
 	//Private Area
 	$wp_customize->add_section( 'private-area', array(
 	  'title' => __( 'Private Area', 'propertymanagers' ),
@@ -558,16 +441,16 @@ function svbk_privatearea_customizer( $wp_customize ){
 	));		
 
 }
-add_action( 'customize_register', 'svbk_privatearea_customizer' );
+add_action( 'customize_register', __NAMESPACE__.'\\customizer' );
 
-function svbk_privatearea_show_admin_bar(){
+function show_admin_bar(){
 	return current_user_can( 'edit_posts' );
 }
 
-add_filter( 'show_admin_bar' , 'svbk_privatearea_show_admin_bar');
+add_filter( 'show_admin_bar' , __NAMESPACE__.'\\show_admin_bar');
 
 
-function svbk_privatearea_enable_acf_forms(){
+function enable_acf_forms(){
     
     if( is_page( get_theme_mod( 'private_area_profile' ) ) ) {
        acf_form_head(); 
@@ -575,4 +458,189 @@ function svbk_privatearea_enable_acf_forms(){
     
 }
 
-add_action( 'wp_enqueue_scripts', 'svbk_privatearea_enable_acf_forms' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__.'\\enable_acf_forms' );
+
+if ( ! wp_next_scheduled( 'svbk_privatearea_expiration_check' ) ) {
+  wp_schedule_event( time(), 'hourly', 'svbk_privatearea_expiration_check' );
+}
+
+add_action( 'svbk_privatearea_expiration_check', __NAMESPACE__.'\\check_expiration' );
+
+function check_expiration() {
+        
+        $reference = new DateTime('NOW');
+
+        send_expiration_notifications(
+            $reference, 
+            Helpers\Theme\Theme::conf('mailing', 'template_member_expired'), 
+            'subscription_expired_notification_sent',
+            array('tags' => array( 'wp-member-expire' ) ) 
+        );
+        
+        $reference->add( new DateInterval( 'P15D' ) );
+    
+        send_expiration_notifications(
+            $reference, 
+            Helpers\Theme\Theme::conf('mailing', 'template_member_expiring'), 
+            'subscription_expiring_notification_sent',
+            array('tags' => array( 'wp-member-expiring' ) ) 
+        ); 
+        
+
+}
+
+function send_expiration_notifications( DateTime $reference, $mcTemplate, $notField, $mcArgs = array() ) {
+
+    $args = array(
+    	'post_type'  => Profile::POST_TYPE,
+    	'posts_per_page' => -1,
+    	'meta_query' => array(
+    	    'operator' => 'AND',
+    	    array(
+    			'key'     => $notField,
+    			'value'   => '1',
+    			'compare' => '!=',
+    		),
+    		array(
+    			'key'     => Profile::EXPIRE_FIELD,
+    			'value'   => '',
+    			'compare' => '!=',
+    		), 
+    		array(
+    			'key'     => Profile::EXPIRE_FIELD,
+    			'value'   => $reference->format( Profile::DATE_FORMAT_SAVE ),
+    			'compare' => '<',
+    			'type' => 'NUMERIC'
+    		),
+    	),
+    );
+    
+    $profile_query = new WP_Query( $args );    
+    
+    if ( $profile_query->have_posts() ) {
+    	// The 2nd Loop
+    	while ( $profile_query->have_posts() ) {
+    		$profile_query->next_post();
+
+            $profile = new Profile( $profile_query->post->ID );
+
+    	    $users = get_users(
+                array(
+                    'meta_key' => Member::PROFILE_FIELD,
+                    'meta_value' => $profile->id(),
+                )
+            );
+            
+            $recipients = array();
+            $merge_tags = array();
+            
+            foreach( $users as $user ) {
+                
+                $recipients[] = array(
+                    'email' => $user->user_email,
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'type' => 'to'
+                );
+                
+                $merge_tags[] = array(
+                    'rcpt' => $user->user_email,
+                    'vars' => Helpers\Mailing\Mandrill::castMergeTags(
+                        array(
+                            'FNAME' => $user->first_name,
+                            'LNAME' => $user->last_name,
+                        )
+                    )
+                );
+            }
+    	
+    	    $emailArgs =  array_merge_recursive(
+    	        array(
+                    'to' => $recipients,
+                    'merge_vars' => $merge_tags,
+                    'global_merge_vars' => array(
+                        'COMPANY_NAME' => $profile->meta('company_name'),
+                        'EXPIRE_DATE' => $profile->subscription_expires()->format( 'd/m/Y' ),
+                        'RENEW_URL' => Helpers\Payment\PayPal::buttonUrl( Helpers\Theme\Theme::conf('paypal', 'button_id'), array( 'custom' => $user->ID ) )
+                    ),
+                ),
+                $mcArgs
+            );
+
+            $errors = send_email( $mcTemplate, $emailArgs );
+            
+            if( empty($errors) ) {
+                update_post_meta( $profile->id(), $notField, '1' );
+            }            
+            
+    	}
+    }    
+
+}
+
+function send_email( $template, $args ){
+    
+        $logger = new Helpers\Log\Email; 
+        $logger->defaultSubject = 'Mandrill Send Log';
+     
+        $defaultArgs = array(
+            'global_merge_vars' => array(
+                    'HOME_URL' => home_url( '/' ),
+                    'PRIVATEAREA_URL' => get_permalink( get_theme_mod('private_area_home') ),
+            ),
+            'metadata' => array(
+                'website' => home_url( '/' )
+            ),
+            'merge' => true,        
+        );
+        
+        if( Helpers\Theme\Theme::conf('debug_email') ) {
+            $defaultArgs['bcc_address'] = Helpers\Theme\Theme::conf('debug_email');
+        }
+        
+        if( Helpers\Theme\Theme::conf('mailing', 'from_email') ) {
+            $defaultArgs['from_email'] = Helpers\Theme\Theme::conf('mailing', 'from_email');
+        }    
+        
+        if( Helpers\Theme\Theme::conf('mailing', 'from_name') ) {
+            $defaultArgs['from_name'] = Helpers\Theme\Theme::conf('mailing', 'from_name');
+        }            
+     
+        $emailArgs = array_replace_recursive(
+            Helpers\Mailing\Mandrill::$messageDefaults,
+            $defaultArgs,
+            $args
+        );
+        
+        if( isset( $emailArgs['global_merge_vars'] ) && is_array( $emailArgs['global_merge_vars'] ) ){
+            $emailArgs['global_merge_vars'] = Helpers\Mailing\Mandrill::castMergeTags( $emailArgs['global_merge_vars'] );
+        }
+     
+        try {
+
+            $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
+
+            $results = $mandrill->messages->sendTemplate($template, array(), $emailArgs);
+            
+            if( !is_array($results) || !isset($results[0]['status']) ){
+                throw new Mandrill_Error( __('The requesto to our mail server failed, please try again later or contact the site owner.', 'svbk-helpers') );
+            } 
+            
+            $errors = $mandrill->getResponseErrors($results);    
+        
+            foreach($errors as $error){
+                $logger->error($error);
+            }      
+        
+        } catch(Mandrill_Error $e) {
+            $logger->critical( $e->getMessage() );
+            return array( $e->getMessage() ); 
+        }           
+    
+        return $errors;
+    
+}
+
+/**
+ * Load Global Pluggables
+ */
+require 'pluggables.php';
