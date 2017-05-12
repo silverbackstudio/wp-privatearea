@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SilverbackStudio Member Private Area\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-11 15:32+0000\n"
-"PO-Revision-Date: 2017-05-11 15:34+0000\n"
+"POT-Creation-Date: 2017-05-12 13:05+0000\n"
+"PO-Revision-Date: 2017-05-12 13:06+0000\n"
 "Last-Translator: Silverback Studio <webmaster2@silverbackstudio.it>\n"
 "Language-Team: Italian\n"
 "Language: it-IT\n"
@@ -13,27 +13,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:724
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:798
 #, php-format
-msgid "%s - E-mail change request"
-msgstr "%s - Richiesta modifica email"
+msgid "%s - Invoice N. %s - Date %s "
+msgstr "%s - Fattura N. %s in data %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:747
-msgid "This email address is invalid"
-msgstr "L'indirizzo e-mail non é valido."
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:28
+msgid "Page {PAGENO} of {nb}"
+msgstr "Pagina {PAGENO} di {nb}"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:751
-msgid "This email address already exists"
-msgstr "L'indirizzo email é gia presente."
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:34
+msgid "Invoice Number"
+msgstr "Fattura Numero"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:763
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:35
 #, php-format
-msgid ""
-"Email change request pending. We sent an email to %s, please click on the "
-"link inside to confirm."
+msgctxt "invoice"
+msgid "Date: %s"
+msgstr "Data emissione: %s"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:48
+msgid "Description"
+msgstr "Descrizione"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:49
+msgid "Amount"
+msgstr "Valore"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:15
+msgid "Member Type Content Filter"
 msgstr ""
-"É in corso una modifica dell'e-mail. Abbiamo inviato un messaggio a %s, per "
-"confermare clicca sulla conferma al suo interno."
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:25
+msgid "Members Type"
+msgstr ""
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:28
+msgid "Show only to this member type"
+msgstr ""
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:91
 #, php-format
@@ -73,6 +90,28 @@ msgstr "Errore di creazione profilo su Mailchimp per l'utente %s: %s."
 msgid "Business of %s"
 msgstr "Società di %s"
 
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:724
+#, php-format
+msgid "%s - E-mail change request"
+msgstr "%s - Richiesta modifica email"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:747
+msgid "This email address is invalid"
+msgstr "L'indirizzo e-mail non é valido."
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:751
+msgid "This email address already exists"
+msgstr "L'indirizzo email é gia presente."
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:763
+#, php-format
+msgid ""
+"Email change request pending. We sent an email to %s, please click on the "
+"link inside to confirm."
+msgstr ""
+"É in corso una modifica dell'e-mail. Abbiamo inviato un messaggio a %s, per "
+"confermare clicca sulla conferma al suo interno."
+
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:17
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:25
 msgid "Supporter"
@@ -82,6 +121,12 @@ msgstr "Sostenitore"
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:39
 msgid "Member"
 msgstr "Associato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:17
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:39
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:50
+msgid "VAT ID / SSN"
+msgstr "Partite IVA / Codice Fiscale"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Members.php:20
 msgid "Members List"
@@ -168,10 +213,6 @@ msgstr "Ragione sociale"
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:46
 msgid "Please enter your company name"
 msgstr "Ragioen sociale' non valida o assente"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:50
-msgid "VAT ID / SSN"
-msgstr "Partite IVA / Codice Fiscale"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:52
 msgid "Please enter your fiscal code or VAT ID"

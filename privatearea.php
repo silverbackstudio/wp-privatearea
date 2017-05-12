@@ -766,6 +766,71 @@ function acf_member_email_field( $field ) {
     return $field;
 }
 
+function download_invoice(Profile $profile){
+	global $post;
+	
+	if( ! $profile->meta('invoice_number') ) {
+	    wp_die( __('Your invoice is\'t ready yet. Please try again later', 'propertymanagers') );
+	}
+	 
+	$post = get_post( $profile->id(), 'OBJECT', 'display' );
+	setup_postdata( $post );
+	 
+    $mpdf = new \Mpdf\Mpdf();	
+	$css_path = file_exists( get_theme_file_path('invoice.css') ) ? get_theme_file_path('invoice.css') : ( plugin_dir_path( __FILE__ ) . 'templates/invoice.css' );
+	
+    if( $css_path ) {
+        $stylesheet = file_get_contents( $css_path );
+        $mpdf->WriteHTML( $stylesheet, 1 ); 
+    }
+
+    ob_start();
+
+    if( ! locate_template('pdf-templates/invoice.php', true, false) ) {
+        load_template( plugin_dir_path( __FILE__ ) . 'templates/invoice.php', false);
+    } 
+ 
+    $html = ob_get_contents();
+    ob_end_clean();
+    
+    $mpdf->setAutoTopMargin = 'pad';
+    $mpdf->orig_tMargin = 30;
+    $mpdf->SetTitle( sprintf( __('%s - Invoice N. %s - Date %s ', 'svbk-privatearea'), get_bloginfo('name'), $profile->meta('invoice_number'), $profile->subscription_date()->format('d/m/Y')) );
+    $mpdf->SetAuthor( get_bloginfo('contact_company_name') );
+    $mpdf->SetDisplayMode('fullpage');
+    
+    $mpdf->WriteHTML($html,2);
+    $mpdf->Output(); 
+    exit;
+}
+
+
+function download_page_trigger()
+{
+
+    if( ! is_user_logged_in() || empty($_GET['pdf_download']) || ! is_page( get_theme_mod( 'private_area_profile' ) ) ) {
+        return;
+    }
+
+    $member = Member::current();
+	$profile = $member->profile();
+	
+	if( ! $profile ){
+	    wp_die( __('Your account profile not exists or is not been approved yet.', 'propertymanagers') );
+	}
+    
+    switch( $_GET['pdf_download'] ){
+        case 'invoice':
+            download_invoice( $profile );
+            break;
+        default:
+            return;
+    }
+    
+    exit;
+}
+add_action( 'template_redirect', __NAMESPACE__.'\\download_page_trigger' );
+
 /**
  * Load Global Pluggables
  */
