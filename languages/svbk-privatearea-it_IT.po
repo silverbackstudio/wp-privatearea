@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: SilverbackStudio Member Private Area\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-12 13:05+0000\n"
-"PO-Revision-Date: 2017-05-12 13:06+0000\n"
+"PO-Revision-Date: 2017-05-12 13:12+0000\n"
 "Last-Translator: Silverback Studio <webmaster2@silverbackstudio.it>\n"
 "Language-Team: Italian\n"
 "Language: it-IT\n"
@@ -42,15 +42,15 @@ msgstr "Valore"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:15
 msgid "Member Type Content Filter"
-msgstr ""
+msgstr "Mostra contenuto ad associati"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:25
 msgid "Members Type"
-msgstr ""
+msgstr "Tipologia Iscritto"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:28
 msgid "Show only to this member type"
-msgstr ""
+msgstr "Mostra contenuto solo a questo tipo di iscritto"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:91
 #, php-format
