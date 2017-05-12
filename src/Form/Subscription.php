@@ -98,7 +98,7 @@ class Subscription extends Helpers\Form\Submission {
                     'error' => __('Invalid mobile number', 'svbk-privatearea')
                 ),   
                 'website' => array( 
-                    'required' => true,
+                    'required' => false,
                     'label' => __('Website', 'svbk-privatearea'), 
                     'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'error' => __('Invalid website', 'svbk-privatearea')
