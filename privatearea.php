@@ -20,6 +20,7 @@ use DateTime;
 use DateInterval;
 use WP_Query;
 use Mandrill_Error;
+use \Mpdf\Mpdf as PDF;
 
 define('PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT', 60);
 define('PRIVATEAREA_MEMBER_ENDPOINT', 'member/v1' );
@@ -766,18 +767,9 @@ function acf_member_email_field( $field ) {
     return $field;
 }
 
-function download_invoice(Profile $profile){
-	global $post;
-	
-	if( ! $profile->meta('invoice_number') ) {
-	    wp_die( __('Your invoice is\'t ready yet. Please try again later', 'propertymanagers') );
-	}
-	 
-	$post = get_post( $profile->id(), 'OBJECT', 'display' );
-	setup_postdata( $post );
-	 
-    $mpdf = new \Mpdf\Mpdf();	
-	$css_path = file_exists( get_theme_file_path('invoice.css') ) ? get_theme_file_path('invoice.css') : ( plugin_dir_path( __FILE__ ) . 'templates/invoice.css' );
+function pdf_apply_template(PDF $mpdf, $template){
+
+	$css_path = file_exists( get_theme_file_path( $template . '.css' ) ) ? get_theme_file_path($template . '.css') : ( plugin_dir_path( __FILE__ ) . "templates/{$template}.css" );
 	
     if( $css_path ) {
         $stylesheet = file_get_contents( $css_path );
@@ -786,27 +778,22 @@ function download_invoice(Profile $profile){
 
     ob_start();
 
-    if( ! locate_template('pdf-templates/invoice.php', true, false) ) {
-        load_template( plugin_dir_path( __FILE__ ) . 'templates/invoice.php', false);
+    if( ! locate_template("pdf-templates/{$template}.php", true, false) ) {
+        load_template( plugin_dir_path( __FILE__ ) . "templates/{$template}.php", false);
     } 
  
     $html = ob_get_contents();
     ob_end_clean();
     
-    $mpdf->setAutoTopMargin = 'pad';
-    $mpdf->orig_tMargin = 30;
-    $mpdf->SetTitle( sprintf( __('%s - Invoice N. %s - Date %s ', 'svbk-privatearea'), get_bloginfo('name'), $profile->meta('invoice_number'), $profile->subscription_date()->format('d/m/Y')) );
-    $mpdf->SetAuthor( get_bloginfo('contact_company_name') );
-    $mpdf->SetDisplayMode('fullpage');
-    
-    $mpdf->WriteHTML($html,2);
-    $mpdf->Output(); 
-    exit;
+    $mpdf->WriteHTML($html, 0);
+    return $mpdf;
 }
 
 
 function download_page_trigger()
 {
+
+	global $post;
 
     if( ! is_user_logged_in() || empty($_GET['pdf_download']) || ! is_page( get_theme_mod( 'private_area_profile' ) ) ) {
         return;
@@ -816,16 +803,47 @@ function download_page_trigger()
 	$profile = $member->profile();
 	
 	if( ! $profile ){
-	    wp_die( __('Your account profile not exists or is not been approved yet.', 'propertymanagers') );
+	    wp_die( __('Your account profile not exists or is not been approved yet.', 'svbk-privatearea') );
 	}
-    
+
+	$post = get_post( $profile->id(), 'OBJECT', 'display' );
+	setup_postdata( $post );
+	
     switch( $_GET['pdf_download'] ){
         case 'invoice':
-            download_invoice( $profile );
+        	$pdf = new PDF();
+    	    $pdf->SetDisplayMode('fullpage');
+        	$pdf->setAutoTopMargin = 'pad';
+            $pdf->orig_tMargin = 30;
+        	
+        	if( ! $profile->meta('invoice_number') ) {
+        	    wp_die( __('Your invoice is\'t ready yet. Please try again later', 'svbk-privatearea') );
+        	}   
+        	
+            $pdf = pdf_apply_template($pdf, 'invoice' );
+            $pdf->SetTitle( sprintf( __('%s - Invoice N. %s - Date %s ', 'svbk-privatearea'), get_bloginfo('name'), $profile->meta('invoice_number'), $profile->subscription_date()->format('d/m/Y')) );
+            
             break;
+        case 'certificate':
+        	$pdf = new PDF( array('orientation' => 'L', 'margin_top'=>30) );
+        	$pdf->SetDisplayMode('fullpage');
+        	$pdf->AddPage('L');
+    
+        	if( ! $profile->type() === ACL::ROLE_MEMBER ) {
+        	    wp_die( __('TThe certificate is available only to full members.', 'svbk-privatearea') );
+        	}
+        	
+            $pdf = pdf_apply_template($pdf, 'certificate' );
+        
+            $pdf->SetTitle( sprintf( __('%s - Certificate %s ', 'svbk-privatearea'), get_bloginfo('name'), date('Y'), $profile->subscription_date()->format('d/m/Y')) );
+
+            break;         
         default:
             return;
     }
+    
+    $pdf->SetAuthor( get_bloginfo('contact_company_name') );
+    $pdf->Output();
     
     exit;
 }

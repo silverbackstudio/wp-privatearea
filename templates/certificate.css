@@ -1,0 +1,38 @@
+body{
+    text-align: center;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.company-logo{
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.company-name{
+    border-bottom: 1px solid #000;
+    margin: 3em 5em;
+}
+
+.intro{
+    margin:3em 2em;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.outro{
+    margin:5em 2em;
+    font-style: italic;
+}
+
+.signature{
+    padding-top: 2em;
+    margin-top: 2em;
+}
