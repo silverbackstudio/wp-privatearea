@@ -36,4 +36,14 @@ class MemberEdit extends Shortcakes\Forms\ACF {
         
     }
 
+    public function output( $attr, $content, $shortcode_tag ) {
+        
+        $content = parent::output($attr, $content, $shortcode_tag);
+        
+        $content .= '<a class="lost-password" href="'. wp_lostpassword_url( get_permalink() ) .'" >'. __('Lost Password? Click here to reset it', 'propertymanagers') .'</a>';
+
+        return $content;
+        
+    }
+
 }
