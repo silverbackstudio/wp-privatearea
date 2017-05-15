@@ -849,6 +849,24 @@ function download_page_trigger()
 }
 add_action( 'template_redirect', __NAMESPACE__.'\\download_page_trigger' );
 
+
+function manage_profile_thumbnail($html, $post_id, $post_thumbnail_id, $size,  $attr){
+    
+    if( ( Profile::POST_TYPE === get_post_type($post_id) ) && ! $post_thumbnail_id ) {
+        
+        $profile = new Profile( $post_id );
+        $attachment_id = $profile->meta('company_logo');
+        
+        if( $attachment_id ){
+            $html = wp_get_attachment_image( $attachment_id, $size, 0, $attr );
+        }
+    }
+
+    return $html;
+}
+
+add_filter( 'post_thumbnail_html', __NAMESPACE__.'\\manage_profile_thumbnail', 10, 5 );
+
 /**
  * Load Global Pluggables
  */
