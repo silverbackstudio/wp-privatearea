@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SilverbackStudio Member Private Area\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-12 16:19+0000\n"
-"PO-Revision-Date: 2017-05-12 16:20+0000\n"
+"POT-Creation-Date: 2017-05-15 14:55+0000\n"
+"PO-Revision-Date: 2017-05-15 14:55+0000\n"
 "Last-Translator: Silverback Studio <webmaster2@silverbackstudio.it>\n"
 "Language-Team: Italian\n"
 "Language: it-IT\n"
@@ -13,23 +13,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:806
-msgid "Your account profile not exists or is not been approved yet."
-msgstr "Il tuo profilo non esiste ancora o non é ancora stato approvato."
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:820
-msgid "Your invoice is't ready yet. Please try again later"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:43
+msgid "Click here to change your password"
 msgstr ""
-"La tua fattura non é ancora pronta. Per favore riprova fra qualche giorno."
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:833
-msgid "TThe certificate is available only to full members."
-msgstr "Il certificato é disponibile solo per gli Associati."
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:838
-#, php-format
-msgid "%s - Certificate %s "
-msgstr "%s - Certificato %s"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:91
 #, php-format
@@ -91,10 +77,28 @@ msgstr ""
 "É in corso una modifica dell'e-mail. Abbiamo inviato un messaggio a %s, per "
 "confermare clicca sulla conferma al suo interno."
 
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:806
+msgid "Your account profile not exists or is not been approved yet."
+msgstr "Il tuo profilo non esiste ancora o non é ancora stato approvato."
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:820
+msgid "Your invoice is't ready yet. Please try again later"
+msgstr ""
+"La tua fattura non é ancora pronta. Per favore riprova fra qualche giorno."
+
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:824
 #, php-format
 msgid "%s - Invoice N. %s - Date %s "
 msgstr "%s - Fattura N. %s in data %s"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:833
+msgid "TThe certificate is available only to full members."
+msgstr "Il certificato é disponibile solo per gli Associati."
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:838
+#, php-format
+msgid "%s - Certificate %s "
+msgstr "%s - Certificato %s"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:17
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/ACL.php:25
