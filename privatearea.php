@@ -867,6 +867,54 @@ function manage_profile_thumbnail($html, $post_id, $post_thumbnail_id, $size,  $
 
 add_filter( 'post_thumbnail_html', __NAMESPACE__.'\\manage_profile_thumbnail', 10, 5 );
 
+function notices(){
+    
+    $member = Member::current();
+    $profile = $member->profile();    
+    
+    if( $profile ) {
+    	$payment_button =  Helpers\Payment\PayPal::buttonUrl( 
+    	    Helpers\Theme\Theme::conf('paypal', 'button_id'), 
+    	    array( 
+    	        'custom' => $member->id(),
+    	    )
+    	);
+    }    
+    
+	if ( $profile && $profile->is_subscription_expired( 'P15D' ) ): ?>
+	<div class="warning notification">
+		<div class="heading"><?php printf( __('Warning %s', 'propertymanagers'), $member->meta( 'first_name' )) ?></div>
+		<p class="intro" >Mancano solo <?php echo $profile->subscription_expire_eta( '%a' ); ?> giorni alla scadenza della tua iscrizione.</p>
+		<?php if( !empty($payment_button) && ACL::ROLE_MEMBER === $profile->type() ): ?>
+		<p class="message" >Rinnova adesso e assicurati una altro anno da Property Manager!</p>
+		<a class="button" href="<?php echo esc_url($payment_button); ?>" target="_blank" >Rinnova Ora</a>
+		<?php elseif ( !empty($payment_button) ) : ?>
+		<p class="message" >Associati adesso e assicurati un anno da Property Manager!</p>
+		<a class="button" href="<?php echo esc_url($payment_button); ?>" target="_blank" >Associati Ora</a>
+		<?php endif; ?>
+	</div>
+	<?php endif; ?>
+	<?php
+	if ( ( ! $profile || ( $profile->completed() < 1 ) ) && ! is_page( get_theme_mod( 'private_area_profile' ) ) ): ?>
+	<div class="notice notification">
+		<div class="heading"><?php printf( __('Warning %s', 'propertymanagers'), $member->meta( 'first_name' )) ?></div>
+		<?php if( ! $profile ) : ?>
+		<p class="intro" >Non hai ancora creato il tuo profilo</p>
+		<p class="message" >Per poter essere associato devi completare i dati nel tuo profilo</p>
+		<a class="button" href="<?php echo get_permalink( get_theme_mod( 'private_area_profile' ) ); ?>" >Crea il tuo profilo</a>		
+		<?php else: ?>
+		<p class="intro" >Il tuo account è completo al <?php echo ceil( $profile->completed() * 100) ; ?>%</p>
+		<p class="message" >Per poter essere associato devi completare i dati nel tuo profilo</p>
+		<a class="button" href="<?php echo get_permalink( get_theme_mod( 'private_area_profile' ) ); ?>" >Completa il tuo profilo</a>		
+		<?php endif; ?>
+	</div>
+	<?php endif; ?>
+<?php
+}
+
+add_action( 'privatearea_notices', __NAMESPACE__.'\\notices' );
+
+
 /**
  * Load Global Pluggables
  */
