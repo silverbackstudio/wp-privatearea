@@ -852,7 +852,7 @@ add_action( 'template_redirect', __NAMESPACE__.'\\download_page_trigger' );
 
 function manage_profile_thumbnail($html, $post_id, $post_thumbnail_id, $size,  $attr){
     
-    if( ( Profile::POST_TYPE === get_post_type($post_id) ) && ! $post_thumbnail_id ) {
+    if( ( Profile::POST_TYPE === get_post_type($post_id) ) ) {
         
         $profile = new Profile( $post_id );
         $attachment_id = $profile->meta('company_logo');
