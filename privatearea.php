@@ -453,16 +453,16 @@ function show_admin_bar(){
 
 add_filter( 'show_admin_bar' , __NAMESPACE__.'\\show_admin_bar');
 
-
 function enable_acf_forms(){
     
     if( is_page( get_theme_mod( 'private_area_profile' ) ) ) {
        acf_form_head(); 
+       add_filter( "acf/settings/enqueue_google_maps", false );
     }
     
 }
 
-add_action( 'wp_enqueue_scripts', __NAMESPACE__.'\\enable_acf_forms' );
+add_action( 'wp', __NAMESPACE__.'\\enable_acf_forms' );
 
 if ( ! wp_next_scheduled( 'svbk_privatearea_expiration_check' ) ) {
   wp_schedule_event( time(), 'hourly', 'svbk_privatearea_expiration_check' );
