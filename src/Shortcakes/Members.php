@@ -41,6 +41,7 @@ class Members extends Base {
     	    'post_type' => $this->post_type,
     	    'post_status' => 'publish',
     	    'orderby' => 'date',
+    	    'order' => 'ASC',
     	    'posts_per_page' => $attr['count'],
     	), $this->query_args );
     	
