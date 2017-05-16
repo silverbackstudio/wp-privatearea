@@ -20,6 +20,8 @@ use DateTime;
 use DateInterval;
 use WP_Query;
 use Mandrill_Error;
+use WP_REST_Request; 
+use WP_Error; 
 use \Mpdf\Mpdf as PDF;
 
 define('PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT', 60);
