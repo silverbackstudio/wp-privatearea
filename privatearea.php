@@ -850,22 +850,22 @@ function download_page_trigger()
 add_action( 'template_redirect', __NAMESPACE__.'\\download_page_trigger' );
 
 
-function manage_profile_thumbnail($html, $post_id, $post_thumbnail_id, $size,  $attr){
+function replace_profile_thumbnail($meta_value, $object_id, $meta_key, $single){
     
-    if( ( Profile::POST_TYPE === get_post_type($post_id) ) ) {
+    if( ( $meta_key === '_thumbnail_id' ) && ( Profile::POST_TYPE === get_post_type($object_id) ) ) {
         
-        $profile = new Profile( $post_id );
+        $profile = new Profile( $object_id );
         $attachment_id = $profile->meta('company_logo');
         
         if( $attachment_id ){
-            $html = wp_get_attachment_image( $attachment_id, $size, 0, $attr );
+            $meta_value = $attachment_id;
         }
     }
 
-    return $html;
+    return $meta_value;
 }
 
-add_filter( 'post_thumbnail_html', __NAMESPACE__.'\\manage_profile_thumbnail', 10, 5 );
+add_filter( 'get_post_metadata', __NAMESPACE__.'\\replace_profile_thumbnail', 10, 4 );
 
 function notices(){
     
