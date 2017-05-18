@@ -40,6 +40,12 @@ class Members extends Base {
     	return array_merge(array(
     	    'post_type' => $this->post_type,
     	    'post_status' => 'publish',
+            'meta_query' => array(
+                array(
+                   'key' => PrivateArea\Profile::MEMBER_TYPE_FIELD,
+                   'value' => PrivateArea\ACL::ROLE_MEMBER,
+                )
+            ),    	    
     	    'orderby' => 'date',
     	    'order' => 'ASC',
     	    'posts_per_page' => $attr['count'],
