@@ -144,21 +144,16 @@ function user_register_mc( $user_id ){
     $mailchimp = new Helpers\Mailing\MailChimp( Helpers\Theme\Theme::conf('mailing', 'mc_apikey') );
     $list_id = Helpers\Theme\Theme::conf('mailing', 'mc_list_id');    
     
-    $mailchimp->post("lists/$list_id/members", [
-			'email_address' => $email,
-			'status'        => 'subscribed',
+    $errors = $mailchimp->subscribe($list_id, $email, [
 			'merge_fields' => [ 
 			    'FNAME' => $member->meta('firstname'), 
 			    'LNAME' => $member->meta('lastname'),
 			    'MARKETING' => 'yes',
 			    'MEMBERTYPE' => $member->get_type() ?: 'subscriber',
-			],
-            'ip_signup'     => $_SERVER['REMOTE_ADDR'],
-            'ip_opt'        => $_SERVER['REMOTE_ADDR'],
-            'language'      => substr(get_locale(), 0, 2),	
+			]
 	]); 
 	
-    if( ! $mailchimp->success() ) {
+    if( !empty($errors) ) {
         set_admin_notices_transient( "svbk_mc_user_create_error" , array( $email => $mailchimp->getLastError() ));
     } else {
         set_admin_notices_transient( "svbk_mc_user_create_success" , array( $email ));
