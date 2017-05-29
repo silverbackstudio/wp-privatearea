@@ -44,7 +44,7 @@ function set_admin_notices_transient( $handle, $value ){
     if( $prev ){
         set_transient( $handle, array_merge( $prev, $value ), PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT );
     } else {
-        set_transient( $handle, $value, PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT );
+        set_transient( $handle,  $value, PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT );
     }
     
 }
@@ -122,9 +122,9 @@ function mc_user_update_notices() {
         delete_transient("svbk_mc_user_create_error");
     }
     
-    if ( $messages = get_transient( "svbk_mc_user_create_success" ) ) {  ?>
+    if ( $emails = get_transient( "svbk_mc_user_create_success" ) ) {  ?>
         <div class="notice notice-success is-dismissible"> 
-            <?php foreach( $messages as $email ) : ?>
+            <?php foreach( $emails as $email ) : ?>
             <p><?php printf( __( 'Mailchimp create completed for user %s', 'svbk-privatearea'), $email); ?></p>   
             <?php endforeach; ?>
         </div><?php
