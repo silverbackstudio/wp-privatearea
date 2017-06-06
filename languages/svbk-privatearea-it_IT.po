@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SilverbackStudio Member Private Area\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-15 14:55+0000\n"
-"PO-Revision-Date: 2017-05-15 14:55+0000\n"
+"POT-Creation-Date: 2017-06-06 14:26+0000\n"
+"PO-Revision-Date: 2017-06-06 14:27+0000\n"
 "Last-Translator: Silverback Studio <webmaster2@silverbackstudio.it>\n"
 "Language-Team: Italian\n"
 "Language: it-IT\n"
@@ -13,62 +13,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:887
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:901
+#, php-format
+msgid "Warning %s"
+msgstr "Attenzione %s"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:919
+msgid "Member Profile"
+msgstr "Profilo Aziendale"
+
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:43
 msgid "Click here to change your password"
-msgstr ""
+msgstr "Clicca qui per cambiare la tua password"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:91
 #, php-format
 msgid "Your account details at %s"
 msgstr "I dettagli del tuo account su %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:94
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:96
 #, php-format
 msgid "Mailchimp Update Error for user <b>%s</b>: %s."
 msgstr "Errore di aggiornamento dati su Mailchimp per l'utente %s: %s."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:96
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:117
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:98
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:119
 msgid "Please update values manually or subscribe the user to mailchimp list"
 msgstr ""
 "Per favore aggiorna i dati manualmente o iscrivi l'utente alla lista di "
 "Mailchimp"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:105
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:107
 #, php-format
 msgid "Mailchimp update completed for user %s"
 msgstr "Completato aggiornamento dati su Mailchimp per l'utente %s "
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:115
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:117
 #, php-format
 msgid "Mailchimp Create Error for user <b>%s</b>: %s."
 msgstr "Errore di creazione profilo su Mailchimp per l'utente %s: %s."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:126
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:128
 #, php-format
 msgid "Mailchimp create completed for user %s"
 msgstr "Errore di creazione profilo su Mailchimp per l'utente %s: %s."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:184
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:323
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:181
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:320
 #, php-format
 msgid "Business of %s"
 msgstr "Società di %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:725
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:726
 #, php-format
 msgid "%s - E-mail change request"
 msgstr "%s - Richiesta modifica email"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:748
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:749
 msgid "This email address is invalid"
 msgstr "L'indirizzo e-mail non é valido."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:752
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:753
 msgid "This email address already exists"
 msgstr "L'indirizzo email é gia presente."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:764
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:765
 #, php-format
 msgid ""
 "Email change request pending. We sent an email to %s, please click on the "
@@ -77,25 +87,25 @@ msgstr ""
 "É in corso una modifica dell'e-mail. Abbiamo inviato un messaggio a %s, per "
 "confermare clicca sulla conferma al suo interno."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:806
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:807
 msgid "Your account profile not exists or is not been approved yet."
 msgstr "Il tuo profilo non esiste ancora o non é ancora stato approvato."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:820
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:821
 msgid "Your invoice is't ready yet. Please try again later"
 msgstr ""
 "La tua fattura non é ancora pronta. Per favore riprova fra qualche giorno."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:824
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:825
 #, php-format
 msgid "%s - Invoice N. %s - Date %s "
 msgstr "%s - Fattura N. %s in data %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:833
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:834
 msgid "TThe certificate is available only to full members."
 msgstr "Il certificato é disponibile solo per gli Associati."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:838
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:839
 #, php-format
 msgid "%s - Certificate %s "
 msgstr "%s - Certificato %s"

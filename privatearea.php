@@ -884,7 +884,7 @@ function notices(){
     
 	if ( $profile && $profile->is_subscription_expired( 'P15D' ) ): ?>
 	<div class="warning notification">
-		<div class="heading"><?php printf( __('Warning %s', 'propertymanagers'), $member->meta( 'first_name' )) ?></div>
+		<div class="heading"><?php printf( __('Warning %s', 'svbk-privatearea'), $member->meta( 'first_name' )) ?></div>
 		<p class="intro" >Mancano solo <?php echo $profile->subscription_expire_eta( '%a' ); ?> giorni alla scadenza della tua iscrizione.</p>
 		<?php if( !empty($payment_button) && ACL::ROLE_MEMBER === $profile->type() ): ?>
 		<p class="message" >Rinnova adesso e assicurati una altro anno da Property Manager!</p>
@@ -898,7 +898,7 @@ function notices(){
 	<?php
 	if ( ( ! $profile || ( $profile->completed() < 1 ) ) && ! is_page( get_theme_mod( 'private_area_profile' ) ) ): ?>
 	<div class="notice notification">
-		<div class="heading"><?php printf( __('Warning %s', 'propertymanagers'), $member->meta( 'first_name' )) ?></div>
+		<div class="heading"><?php printf( __('Warning %s', 'svbk-privatearea'), $member->meta( 'first_name' )) ?></div>
 		<?php if( ! $profile ) : ?>
 		<p class="intro" >Non hai ancora creato il tuo profilo</p>
 		<p class="message" >Per poter essere associato devi completare i dati nel tuo profilo</p>
@@ -915,6 +915,23 @@ function notices(){
 
 add_action( 'privatearea_notices', __NAMESPACE__.'\\notices' );
 
+function manage_user_columns( $column ) {
+    $column['profile'] = __('Member Profile', 'svbk-privatearea');
+    return $column;
+}
+add_filter( 'manage_users_columns', __NAMESPACE__.'\\manage_user_columns' );
+
+function user_columns_row( $val, $column_name, $user_id ) {
+    switch ($column_name) {
+        case 'profile' :
+            $profile_id = get_the_author_meta( Member::PROFILE_FIELD, $user_id );
+            return '<a href="' . get_edit_post_link($profile_id) . '">' . get_the_title($profile_id) . '</a>';
+            break;
+        default:
+    }
+    return $val;
+}
+add_filter( 'manage_users_custom_column', __NAMESPACE__.'\\user_columns_row', 10, 3 );
 
 /**
  * Load Global Pluggables
