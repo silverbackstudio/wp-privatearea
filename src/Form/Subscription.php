@@ -140,7 +140,13 @@ class Subscription extends Helpers\Form\Submission {
             )
         );
     
-        $profile = PrivateArea\create_profile($member->id(), $profile_meta);
+        $profile = $member->profile();
+        if( ! $profile ) {
+            $profile = PrivateArea\create_profile($member->id(), $profile_meta);
+        } else {
+            wp_update_post($profile->id(), $profile_meta);
+        }
+        
         $profile->set_type( PrivateArea\ACL::ROLE_SUPPORTER );
 
         $paymentDate = new DateTime('NOW');

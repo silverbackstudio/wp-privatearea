@@ -24,6 +24,10 @@ class ProfileEdit extends Shortcakes\Forms\ACF {
             $attr['post_id'] = $profile->id();
         } else {
             $attr['post_id'] = 'new_post';
+            $attr['new_post'] = array(
+    			'post_type'		=> PrivateArea\Profile::POST_TYPE,
+    			'post_status'	=> 'publish',
+    		);
         }
         
         return $attr;

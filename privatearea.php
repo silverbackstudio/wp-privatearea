@@ -161,9 +161,9 @@ function user_register_mc( $user_id ){
     
 }
 
-//add_action( 'user_register', __NAMESPACE__.'\\create_profile', 9 );
+add_action( 'user_register', __NAMESPACE__.'\\create_profile', 9 );
 
-function create_profile( $user_id, $profile_meta = array() ){
+function create_profile( $user_id, $post_data = array() ){
     
     $user = get_userdata( $user_id );
     
@@ -180,7 +180,7 @@ function create_profile( $user_id, $profile_meta = array() ){
                 array( 
                     'post_title' => sprintf ( __( 'Business of %s', 'svbk-privatearea'), $member->meta('user_email') ) 
                     ),
-                $profile_meta
+                $post_data
             )
         );
         $member->set_profile( $profile );

@@ -23,14 +23,9 @@ class Profile {
 
     public static function create( $post_args = array() ) {
         
-        $id = wp_insert_post( 
-            array_merge(
-                $post_args,    
-                array(
-                    'post_type' => self::POST_TYPE,
-                )
-            )
-        );
+        $post_args['post_type'] = self::POST_TYPE;
+        
+        $id = wp_insert_post( $post_args );
         
         if( $id ){
             return new self( $id );
