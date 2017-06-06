@@ -942,7 +942,9 @@ function user_columns_row( $val, $column_name, $user_id ) {
     switch ($column_name) {
         case 'profile' :
             $profile_id = get_the_author_meta( Member::PROFILE_FIELD, $user_id );
-            return '<a href="' . get_edit_post_link($profile_id) . '">' . ( get_the_title($profile_id) ?: __('No title', 'svbk-privatearea') ). '</a>';
+            if( $profile_id && ( $edit_link = get_edit_post_link($profile_id) ) ) {
+                return '<a href="' . $edit_link . '">' . ( get_the_title($profile_id) ?: __('No title', 'svbk-privatearea') ). '</a>';
+            }
             break;
         default:
     }
