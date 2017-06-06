@@ -144,7 +144,8 @@ class Subscription extends Helpers\Form\Submission {
         if( ! $profile ) {
             $profile = PrivateArea\create_profile($member->id(), $profile_meta);
         } else {
-            wp_update_post($profile->id(), $profile_meta);
+            $profile_meta['ID'] = $profile->id();
+            wp_update_post($profile_meta);
         }
         
         $profile->set_type( PrivateArea\ACL::ROLE_SUPPORTER );

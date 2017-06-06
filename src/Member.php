@@ -77,7 +77,12 @@ class Member {
     public function set_profile( Profile $profile ){
         $this->profile = $profile;
         
-        return update_user_meta( $this->id(), self::PROFILE_FIELD, $profile->id() );
+        $result = $this->set_meta( self::PROFILE_FIELD, $profile->id() );
+        
+        if ( $this->meta(self::PROFILE_FIELD ) != $profile->id() )
+        	wp_die('An error occurred');
+        
+        return $result;
     }
 
     public function meta($meta_key, $single = true){

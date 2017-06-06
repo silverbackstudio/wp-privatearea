@@ -178,13 +178,30 @@ function create_profile( $user_id, $post_data = array() ){
         $profile = Profile::create( 
             array_merge(
                 array( 
-                    'post_title' => sprintf ( __( 'Business of %s', 'svbk-privatearea'), $member->meta('user_email') ) 
+                    'post_title' => sprintf ( __( 'Business of %s', 'svbk-privatearea'), $member->meta('user_email') ),
+                    'meta_input' => array(
+                        'billing_first_name' => $member->meta( 'first_name' ),
+                        'billing_last_name' => $member->meta( 'last_name' ),
+                        ),
                     ),
                 $post_data
             )
         );
         $member->set_profile( $profile );
     }
+    
+    //Dirty fix to prevent ACF to reset the field after loading
+    add_filter('acf/update_value/key=field_5903573a0e98b', function($value, $post_id, $field) use ($profile) { 
+        if( $value ) {
+            //delete auto created post
+            wp_delete_post( $profile->id() );
+            unset( $profile );
+        } else {
+            $value = $profile->id(); 
+        }
+        
+        return $value;
+    } , 10, 3);
     
     return $profile;
 }
