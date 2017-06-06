@@ -188,6 +188,12 @@ function create_profile( $user_id, $post_data = array() ){
             )
         );
         $member->set_profile( $profile );
+        
+        $paymentDate = new DateTime('NOW');
+        $profile->set_subscribe_date( $paymentDate );  
+        
+        $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'trial') ) );
+        $profile->set_expire( $paymentDate );
     }
     
     //Dirty fix to prevent ACF to reset the field after loading
