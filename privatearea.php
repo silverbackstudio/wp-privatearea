@@ -378,6 +378,9 @@ function payment_ipn( WP_REST_Request $request ){
         add_post_meta( $profile->id(), 'svbk_last_payer_email', $request->get_param('payer_email'), true );
     }
 
+    update_post_meta( $profile->id(), 'subscription_expired_notification_sent', '0' );
+    update_post_meta( $profile->id(), 'subscription_expiring_notification_sent', '0' );
+
     try {
     
         $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
