@@ -41,10 +41,17 @@ class Members extends Base {
     	    'post_type' => $this->post_type,
     	    'post_status' => 'publish',
             'meta_query' => array(
+                'relation'=>'AND',
                 array(
                    'key' => PrivateArea\Profile::MEMBER_TYPE_FIELD,
                    'value' => PrivateArea\ACL::ROLE_MEMBER,
-                )
+                ), 
+                array(
+                   'key' => PrivateArea\Profile::EXPIRE_FIELD,
+                   'value' => date( PrivateArea\Profile::DATE_FORMAT_SAVE ),
+                   'compare' => '>=',
+                   'type' => 'NUMERIC'
+                )                
             ),    	    
     	    'orderby' => 'date',
     	    'order' => 'ASC',
