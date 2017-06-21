@@ -938,11 +938,11 @@ function notices(){
 		<div class="heading"><?php printf( __('Warning %s', 'svbk-privatearea'), $member->meta( 'first_name' )) ?></div>
 		<?php if( ! $profile ) : ?>
 		<p class="intro" >Non hai ancora creato il tuo profilo</p>
-		<p class="message" >Per poter essere associato devi completare i dati nel tuo profilo</p>
+		<p class="message" >Per poter usufruire di tutte le funzionalità completa i dati del tuo profilo</p>
 		<a class="button" href="<?php echo get_permalink( get_theme_mod( 'private_area_profile' ) ); ?>" >Crea il tuo profilo</a>		
 		<?php else: ?>
 		<p class="intro" >Il tuo account è completo al <?php echo ceil( $profile->completed() * 100) ; ?>%</p>
-		<p class="message" >Per poter essere associato devi completare i dati nel tuo profilo</p>
+		<p class="message" >Per poter usufruire di tutte le funzionalità completa i dati del tuo profilo</p>
 		<a class="button" href="<?php echo get_permalink( get_theme_mod( 'private_area_profile' ) ); ?>" >Completa il tuo profilo</a>		
 		<?php endif; ?>
 	</div>
