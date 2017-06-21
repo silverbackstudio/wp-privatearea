@@ -333,6 +333,7 @@ function payment_ipn( WP_REST_Request $request ){
     }
     
     if( !$user ){
+      $logger->critical( 'PAYPAL IPN: Invalid Member Reference: [' . $request->get_param('custom') . '] [' . $request->get_param('payer_email') . ']'  );
       return new WP_Error( 'invalid_member_reference', 'Invalid Member Reference'  , array( 'status' => 200 ) );
     }
     
@@ -352,18 +353,31 @@ function payment_ipn( WP_REST_Request $request ){
     if( !$paymentDate ) {
         $paymentDate = new DateTime('NOW');
     }
-
-    $profile->set_subscribe_date( $paymentDate );
-
-    $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'duration') ) );
-    $profile->set_expire( $paymentDate );
-        
-    $member->set_type( ACL::ROLE_MEMBER );
-
-    add_post_meta( $profile->id(), 'svbk_last_transaction_id', $request->get_param('txn_id'), true );
-    add_post_meta( $profile->id(), 'svbk_last_payer_id', $request->get_param('payer_id'), true );
-    add_post_meta( $profile->id(), 'svbk_last_payer_email', $request->get_param('payer_email'), true );
     
+    if( $profile->subscription_date() === null ){
+        $profile->set_subscribe_date( $paymentDate );
+    }
+
+    $profile->subscription_extend( $paymentDate, new DateInterval( Helpers\Theme\Theme::conf('subscription', 'duration') ) );
+
+    $invoiceId = intval( get_option('svbk_privatearea_last_invoice_id') ) + 1;
+    update_option('svbk_privatearea_last_invoice_id', $invoiceId);
+
+    if( function_exists('add_row') ) {
+        
+        add_row( 'payments', array(
+            'transaction' => $request->get_param('txn_id'),
+            'date' => $paymentDate->format(Profile::DATE_FORMAT_SAVE),
+            'payed_amount' => $request->get_param('mc_gross'),
+            'invoice_id' => $invoiceId,
+        ), $profile->id() );
+        
+    } else {
+        add_post_meta( $profile->id(), 'svbk_last_transaction_id', $request->get_param('txn_id'), true );
+        add_post_meta( $profile->id(), 'svbk_last_payer_id', $request->get_param('payer_id'), true );
+        add_post_meta( $profile->id(), 'svbk_last_payer_email', $request->get_param('payer_email'), true );
+    }
+
     try {
     
         $mandrill = new Helpers\Mailing\Mandrill( Helpers\Theme\Theme::conf('mailing', 'md_apikey') );
@@ -962,3 +976,4 @@ add_filter( 'manage_users_custom_column', __NAMESPACE__.'\\user_columns_row', 10
  * Load Global Pluggables
  */
 require 'pluggables.php';
+require 'acf.php';

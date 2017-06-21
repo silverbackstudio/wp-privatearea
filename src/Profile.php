@@ -14,7 +14,6 @@ class Profile {
     const MEMBER_TYPE_FIELD = 'member_type';
     const DATE_FIELD = 'subscription_date';
     const EXPIRE_FIELD = 'subscription_expire_date';
-    const MEMBER_SINCE_FIELD = 'member_since';
     const DATE_FORMAT_SAVE = 'Ymd';
 
     public function __construct( $profile_id ){
@@ -118,28 +117,31 @@ class Profile {
         return $apartments;
     }
     
-    public function set_subscription_date( DateTime $date ){
-        
-        update_field(self::EXPIRE_FIELD, $value, $this->id());
-    }
-    
     public function set_expire( DateTime $date ){
-        
-        $value = $date->format(self::DATE_FORMAT_SAVE);
-        
-        return update_field(self::EXPIRE_FIELD, $value, $this->id());
-    }    
+        return $this->set_expire_date( $date ); 
+    }   
+    
+    public function set_expire_date( DateTime $date ){
+        return update_field(self::EXPIRE_FIELD, $date->format(self::DATE_FORMAT_SAVE), $this->id());
+    }       
     
     public function set_subscribe_date( DateTime $date ){
+        return update_field(self::DATE_FIELD, $date->format(self::DATE_FORMAT_SAVE), $this->id());
+    }       
+    
+    public function subscription_date(){
+        $raw = $this->meta(self::DATE_FIELD, true, false); 
         
-        $value = $date->format(self::DATE_FORMAT_SAVE);
-        
-        return update_field(self::DATE_FIELD, $value, $this->id());
-    }        
+        if( $raw ) {
+            return DateTime::createFromFormat( 'U', $raw );
+        } else {
+            return null;
+        }
+    }       
     
     public function subscription_expires(){
-        $raw = $this->meta( self::EXPIRE_FIELD, true, false );
-    
+        $raw = $this->meta(self::EXPIRE_FIELD, true, false);
+
         if( $raw ) {
             return DateTime::createFromFormat( 'U', $raw );
         } else {
@@ -147,16 +149,23 @@ class Profile {
         }
     }
     
-    public function subscription_date(){
-        $raw = get_post_time( 'U', false, $this->id ); 
+    public function subscription_extend( DateTime $paymentDate, DateInterval $period ){
         
-        if( $raw ) {
-            return DateTime::createFromFormat( 'U', $raw );
+        if( $this->is_subscription_expired() ){
+            $expireDate = clone $paymentDate;
         } else {
-            return null;
+            $expireDate = $this->subscription_expires();
         }
+        
+        $expireDate->add( $period );
+        $this->set_expire( $expireDate );   
+        
+        return $expireDate;
     }    
 
+    public function is_type( $type ){
+        return $this->meta( self::MEMBER_TYPE_FIELD ) === $type;
+    }
 
     public function is_subscription_expired( $interval = null ){
         $expiration = $this->subscription_expires();
