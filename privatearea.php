@@ -852,7 +852,7 @@ function download_page_trigger()
 	
     switch( $_GET['pdf_download'] ){
         case 'invoice':
-        	$pdf = new PDF();
+        	$pdf = new PDF( array('tempDir' => '/tmp/mpdf/') );
     	    $pdf->SetDisplayMode('fullpage');
         	$pdf->setAutoTopMargin = 'pad';
             $pdf->orig_tMargin = 30;
@@ -866,7 +866,7 @@ function download_page_trigger()
             
             break;
         case 'certificate':
-        	$pdf = new PDF( array('orientation' => 'L', 'margin_top'=>30) );
+        	$pdf = new PDF( array('orientation' => 'L', 'margin_top'=>30, 'tempDir' => '/tmp/mpdf/') );
         	$pdf->SetDisplayMode('fullpage');
         	$pdf->AddPage('L');
     
@@ -927,7 +927,7 @@ function notices(){
 		<div class="heading"><?php printf( __('Warning %s', 'svbk-privatearea'), $member->meta( 'first_name' )) ?></div>
 		<p class="intro" >Mancano solo <?php echo $profile->subscription_expire_eta( '%a' ); ?> giorni alla scadenza della tua iscrizione.</p>
 		<?php if( !empty($payment_button) && ACL::ROLE_MEMBER === $profile->type() ): ?>
-		<p class="message" >Rinnova adesso e assicurati una altro anno da Property Manager!</p>
+		<p class="message" >Rinnova adesso e assicurati un altro anno da Property Manager!</p>
 		<a class="button" href="<?php echo esc_url($payment_button); ?>" target="_blank" >Rinnova Ora</a>
 		<?php elseif ( !empty($payment_button) ) : ?>
 		<p class="message" >Associati adesso e assicurati un anno da Property Manager!</p>
