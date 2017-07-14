@@ -17,11 +17,13 @@ namespace Svbk\WP\Plugins\PrivateArea;
 
 use Svbk\WP\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use DateInterval;
 use WP_Query;
 use Mandrill_Error;
 use WP_REST_Request; 
 use WP_Error; 
+use WP_Session;
 use \Mpdf\Mpdf as PDF;
 
 define('PRIVATEAREA_NOTICE_TRANSIENT_TIMEOUT', 60);
@@ -192,12 +194,12 @@ function create_profile( $user_id, $post_data = array() ){
         $paymentDate = new DateTime('NOW');
         $profile->set_subscribe_date( $paymentDate );  
         
-        $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'trial') ) );
+        $paymentDate->add( new DateInterval( Helpers\Theme\Theme::conf('subscription', 'trial', 'P1Y') ) );
         $profile->set_expire( $paymentDate );
     }
     
     //Dirty fix to prevent ACF to reset the field after loading
-    add_filter('acf/update_value/key=field_5903573a0e98b', function($value, $post_id, $field) use ($profile) { 
+    add_filter('acf/update_value/key=svbk_privatearea_user_' . Member::PROFILE_FIELD, function($value, $post_id, $field) use ($profile) { 
         if( $value ) {
             //delete auto created post
             wp_delete_post( $profile->id() );
@@ -428,7 +430,7 @@ function payment_ipn( WP_REST_Request $request ){
             $logger->error($error);
         }            
     
-    } catch(Mandrill_Error $e) {
+    } catch( Mandrill_Error $e ) {
         $logger->critical( $e->getMessage() );
     }       
          
@@ -701,10 +703,10 @@ add_filter('acf/prepare_field/key=_post_title', __NAMESPACE__.'\\acf_profile_for
 add_filter('acf/prepare_field/key=_post_content', __NAMESPACE__.'\\acf_profile_form_labels');
 
 if( ! is_admin() ){
-    add_filter('acf/load_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_load', 10, 3);
-    add_filter('acf/update_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_update', 10, 3);
-    add_filter('acf/validate_value/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_validate', 10, 4);
-    add_filter('acf/prepare_field/key=field_59035753xt98d', __NAMESPACE__.'\\acf_member_email_field');
+    add_filter('acf/load_value/key=svbk_privatearea_user_email', __NAMESPACE__.'\\acf_member_email_load', 10, 3);
+    add_filter('acf/update_value/key=svbk_privatearea_user_email', __NAMESPACE__.'\\acf_member_email_update', 10, 3);
+    add_filter('acf/validate_value/key=svbk_privatearea_user_email', __NAMESPACE__.'\\acf_member_email_validate', 10, 4);
+    add_filter('acf/prepare_field/key=svbk_privatearea_user_email', __NAMESPACE__.'\\acf_member_email_field');
 }
 
 function acf_member_email_load( $value, $post_id, $field ) {
@@ -852,7 +854,7 @@ function download_page_trigger()
 	
     switch( $_GET['pdf_download'] ){
         case 'invoice':
-        	$pdf = new PDF( array('tempDir' => '/tmp/mpdf/') );
+        	$pdf = new PDF();
     	    $pdf->SetDisplayMode('fullpage');
         	$pdf->setAutoTopMargin = 'pad';
             $pdf->orig_tMargin = 30;
@@ -866,7 +868,7 @@ function download_page_trigger()
             
             break;
         case 'certificate':
-        	$pdf = new PDF( array('orientation' => 'L', 'margin_top'=>30, 'tempDir' => '/tmp/mpdf/') );
+        	$pdf = new PDF( array('orientation' => 'L', 'margin_top'=>30) );
         	$pdf->SetDisplayMode('fullpage');
         	$pdf->AddPage('L');
     
@@ -927,7 +929,7 @@ function notices(){
 		<div class="heading"><?php printf( __('Warning %s', 'svbk-privatearea'), $member->meta( 'first_name' )) ?></div>
 		<p class="intro" >Mancano solo <?php echo $profile->subscription_expire_eta( '%a' ); ?> giorni alla scadenza della tua iscrizione.</p>
 		<?php if( !empty($payment_button) && ACL::ROLE_MEMBER === $profile->type() ): ?>
-		<p class="message" >Rinnova adesso e assicurati un altro anno da Property Manager!</p>
+		<p class="message" >Rinnova adesso e assicurati una altro anno da Property Manager!</p>
 		<a class="button" href="<?php echo esc_url($payment_button); ?>" target="_blank" >Rinnova Ora</a>
 		<?php elseif ( !empty($payment_button) ) : ?>
 		<p class="message" >Associati adesso e assicurati un anno da Property Manager!</p>
@@ -974,6 +976,110 @@ function user_columns_row( $val, $column_name, $user_id ) {
     return $val;
 }
 add_filter( 'manage_users_custom_column', __NAMESPACE__.'\\user_columns_row', 10, 3 );
+
+function post_access_rules()
+{
+
+    if( ! is_singular() || current_user_can('manage_options') ){
+        return;
+    }
+    
+    $membership_level = get_field( 'required_membership_level' );
+
+    $current_url = add_query_arg( 'noredirect', '1' );
+
+    if ( $membership_level && ! current_user_can( Membership::LEVEL_CAPABILITY_PREFIX . $membership_level ) ) {
+        wp_redirect( wp_login_url( $current_url ) );
+        exit();
+    }
+
+    $custom_capability = get_field( 'required_capability' );
+    
+    if ( $custom_capability && ! current_user_can( $custom_capability ) ) {
+        wp_redirect( wp_login_url( $current_url ) );
+        exit();
+    }    
+    
+}
+add_action( 'template_redirect', __NAMESPACE__.'\\post_access_rules' );
+
+add_filter( 'pre_get_avatar', __NAMESPACE__.'\\replace_avatar', 10, 3 );
+
+function replace_avatar( $avatar, $id_or_email, $args ) {
+
+    if ( ! get_option( 'show_avatars' ) ) {
+         return false;
+    }
+
+    // Properly show Avatars and Gravatars on the options-discussion.php page
+    if ( is_admin() ) {
+        $screen = get_current_screen();
+        if ( is_object( $screen ) && in_array( $screen->id, array( 'dashboard', 'options-discussion' ) ) ) {
+            return $avatar;
+        }
+    }
+    
+    $user = is_numeric( $id_or_email ) ? $id_or_email : get_user_by( 'email', $id_or_email );
+    $member = new Member( $user );
+    $attachment_id = $member->avatar();
+    
+    if( $attachment_id ) {
+    	return wp_get_attachment_image( $attachment_id, array($args['size'], $args['size'])  );
+    }
+    
+    return $avatar;
+}
+
+function format_price( $amount, $vat_included = true , $sign = '&euro;' ) {
+    return $sign . ' <span class="amount">' . $amount . '</span>' . ( $vat_included ? '<span class="price-note">*IVA compresa</span>' : '' );
+}
+
+function setup_session(){
+
+    if ( is_admin() ) {
+        return;
+    }
+    
+    $levelsDetails = Membership::levelDetails();
+    $oto_pages = wp_list_pluck( $levelsDetails, 'role', 'oto_page' );
+
+    if ( is_page( array_keys( $oto_pages ) ) ) {
+       
+        $current_page = get_queried_object_id();
+        $oto_page_level = $oto_pages[$current_page];
+       
+        $session = WP_Session::get_instance();
+        
+        $now = new DateTimeImmutable('NOW');
+        
+        if( ! isset( $session[ $oto_page_level . '_discount_expires' ] ) ) {
+            $session[ $oto_page_level . '_discount_expires' ] = $now->add( new DateInterval( 'PT' . $levelsDetails[ $oto_page_level ]['discount_duration'] . 'M' ) ) ;
+        }
+        
+    }
+}
+
+add_action( 'wp', __NAMESPACE__.'\\setup_session'  );
+
+function scripts(){
+    
+	Helpers\Theme\CdnScripts::register_script('jquery.countdown', 'jquery.countdown.js');    
+    
+    $session = WP_Session::get_instance();
+    $levelDetails = Membership::levelDetails();
+    
+    wp_enqueue_script( 'privatearea', plugins_url( '/js/privatearea.js', __FILE__ ), array('jquery', 'jquery.countdown'), '20170530', true );
+    
+    foreach( $levelDetails as &$level ) {
+        if( isset(  $session[ $level['role'] . '_discount_expires'] ) ) {
+            $level[ 'discount_expires' ] = $session[ $level['role'] . '_discount_expires' ]->format('U000');
+        }
+    }    
+    
+    wp_localize_script( 'privatearea', 'privateAreaLevels',  $levelDetails);
+}
+
+add_action( 'wp_enqueue_scripts', __NAMESPACE__.'\\scripts' );
 
 /**
  * Load Global Pluggables

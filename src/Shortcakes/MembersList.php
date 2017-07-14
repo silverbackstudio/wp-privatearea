@@ -6,7 +6,7 @@ use WP_Query;
 use Svbk\WP\Plugins\PrivateArea;
 use Svbk\WP\Shortcakes\Shortcake as Base;
 
-class Members extends Base {
+class MembersList extends Base {
     
     public $shortcode_id = 'members_list';
     public $post_type = 'member';  

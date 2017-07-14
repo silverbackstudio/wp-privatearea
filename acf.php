@@ -4,153 +4,74 @@ namespace Svbk\WP\Plugins\PrivateArea;
 
 use Svbk\WP\Helpers;
 
-add_action( 'after_setup_theme', __NAMESPACE__.'\\svbk_privatearea_acf_register_fields' );
+if( function_exists('acf_add_options_page') ) {
+	
+ 	// add parent
+	$parent = acf_add_options_page(array(
+		'page_title' 	=> __('Private Area', 'svbk-privatearea'),
+		'menu_title' 	=> __('Private Area', 'svbk-privatearea'),
+		'menu_slug' 	=> 'svbk-privatearea',
+		'capability'	=> 'edit_posts',		
+		'redirect' 		=> false
+	));
+	
+	acf_add_options_sub_page(array(
+		'page_title' 	=> __('Notifications', 'svbk-privatearea'),
+		'menu_title' 	=> __('Notifications', 'svbk-privatearea'),
+		'parent_slug' 	=> $parent['menu_slug'],
+		'capability'	=> 'manage_options',
+	));
+	
+	acf_add_options_sub_page(array(
+		'page_title' 	=> __('Membership', 'svbk-privatearea'),
+		'menu_title' 	=> __('Membership', 'svbk-privatearea'),
+		'parent_slug' 	=> $parent['menu_slug'],
+		'capability'	=> 'manage_options',
+	));	
+	
+}
 
-function svbk_privatearea_acf_register_fields(){
+function my_acf_update_value( $post_id  ) {
+	
+   // bail early if no ACF data
+	$input = filter_input( INPUT_POST, 'acf', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	
+    if( empty( $input ) || ( 'options' !== $post_id ) ) {
+        return;
+    }		
+	
+	if( ! empty( $input['svbk_privatearea_user_levels'] ) ) {
+	
+		foreach( $input['svbk_privatearea_user_levels'] as $level ) {
+			
+			Membership::add_level( 
+				$level['svbk_privatearea_user_level_role'],
+				$level['svbk_privatearea_user_level_name'],
+				preg_split('/[\s\n,]+/', $level['svbk_privatearea_user_level_capabilities'], -1, PREG_SPLIT_NO_EMPTY),
+				true
+			);
+			
+		}
+		
+	}
+	
+	// return
+    return $value;
+    
+}
+
+add_action('acf/save_post', __NAMESPACE__.'\\my_acf_update_value', 10, 1);
+
+add_action( 'acf/init', __NAMESPACE__.'\\acf_register_fields', 99 );
+
+function acf_register_fields(){
 
 	if( ! function_exists('acf_add_local_field_group') ){
 		return;
 	}
-
+	
     acf_add_local_field_group(array (
-    	'key' => 'group_58fdf842e0b8c',
-    	'title' => _x('Member Subscription Details', 'field group', 'svbk-privatearea'),
-    	'fields' => array (
-    		array (
-    			'key' => 'field_58fdf84e5eb4a',
-    			'label' => __('Member Type', 'svbk-privatearea'),
-    			'name' => Profile::MEMBER_TYPE_FIELD,
-    			'type' => 'radio',
-    			'instructions' => '',
-    			'required' => 1,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'choices' => ACL::available_roles(),
-    			'allow_null' => 0,
-    			'other_choice' => 0,
-    			'save_other_choice' => 0,
-    			'default_value' => '',
-    			'layout' => 'vertical',
-    			'return_format' => 'value',
-    		),
-    		array (
-    			'key' => 'field_58fdf940f473c',
-    			'label' => __('Current Subscription Date', 'svbk-privatearea'),
-    			'name' => Profile::DATE_FIELD,
-    			'type' => 'date_picker',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'display_format' => 'd/m/Y',
-    			'return_format' => 'U',
-    			'first_day' => 1,
-    		),
-    		array (
-    			'key' => 'field_58fdf8f43b57e',
-    			'label' => __('Subscription Expire Date', 'svbk-privatearea'),
-    			'name' => Profile::EXPIRE_FIELD,
-    			'type' => 'date_picker',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'display_format' => 'd/m/Y',
-    			'return_format' => 'U',
-    			'first_day' => 1,
-    		),
-    		array (
-    			'key' => 'field_591490068a6b1',
-    			'label' => __('Invoice Number', 'svbk-privatearea'),
-    			'name' => 'invoice_number',
-    			'type' => 'text',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'default_value' => '',
-    			'placeholder' => '',
-    			'prepend' => '',
-    			'append' => '',
-    			'maxlength' => '',
-    		),			
-    		array (
-    			'key' => 'field_591432d08bdde',
-    			'label' => __('Expired Notification Sent', 'svbk-privatearea'),
-    			'name' => 'subscription_expired_notification_sent',
-    			'type' => 'true_false',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'message' => __('Uncheck this flag to resend the notification', 'svbk-privatearea'),
-    			'default_value' => 0,
-    			'ui' => 0,
-    			'ui_on_text' => '',
-    			'ui_off_text' => '',
-    		),
-    		array (
-    			'key' => 'field_5914331a8bddf',
-    			'label' => __('Expiring Notification Sent', 'svbk-privatearea'),
-    			'name' => 'subscription_expiring_notification_sent',
-    			'type' => 'true_false',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'message' => __('Uncheck this flag to resend the notification', 'svbk-privatearea'),
-    			'default_value' => 0,
-    			'ui' => 0,
-    			'ui_on_text' => '',
-    			'ui_off_text' => '',
-    		),
-    	),
-    	'location' => array (
-    		array (
-    			array (
-    				'param' => 'post_type',
-    				'operator' => '==',
-    				'value' => 'member',
-    			),
-    		),
-    	),
-    	'menu_order' => 0,
-    	'position' => 'side',
-    	'style' => 'default',
-    	'label_placement' => 'top',
-    	'instruction_placement' => 'label',
-    	'hide_on_screen' => '',
-    	'active' => 1,
-    	'description' => '',
-    ));
-
-
-    acf_add_local_field_group(array (
-    	'key' => 'group_5902fef56f38f',
+    	'key' => 'svbk_privatearea_profile_fields',
     	'title' => _x('Member Details', 'field group', 'svbk-privatearea'),
     	'fields' => array (
     		array (
@@ -444,110 +365,6 @@ function svbk_privatearea_acf_register_fields(){
     			'max_size' => '',
     			'mime_types' => '',
     		),		
-    		array (
-    			'key' => 'field_59030dc8c39eb',
-    			'label' => __('Apartment Types', 'svbk-privatearea'),
-    			'name' => 'apartment_types',
-    			'type' => 'checkbox',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'choices' => Profile::rent_types(),
-    			'allow_custom' => 0,
-    			'save_custom' => 0,
-    			'default_value' => array (
-    			),
-    			'layout' => 'vertical',
-    			'toggle' => 0,
-    			'return_format' => 'value',
-    		),		
-    		array (
-    			'key' => 'field_59030bc7afd19',
-    			'label' => __('Apartments', 'field label', 'svbk-privatearea'),
-    			'name' => 'apartments',
-    			'type' => 'repeater',
-    			'instructions' => '',
-    			'required' => 0,
-    			'conditional_logic' => 0,
-    			'wrapper' => array (
-    				'width' => '',
-    				'class' => '',
-    				'id' => '',
-    			),
-    			'collapsed' => '',
-    			'min' => 0,
-    			'max' => 0,
-    			'layout' => 'table',
-    			'button_label' => __('Add Apartment Group', 'svbk-privatearea'),
-    			'sub_fields' => array (
-    				array (
-    					'key' => 'field_59030bdcafd1a',
-    					'label' => __('City', 'svbk-privatearea'),
-    					'name' => 'city',
-    					'type' => 'text',
-    					'instructions' => '',
-    					'required' => 0,
-    					'conditional_logic' => 0,
-    					'wrapper' => array (
-    						'width' => '',
-    						'class' => '',
-    						'id' => '',
-    					),
-    					'default_value' => '',
-    					'maxlength' => '',
-    					'placeholder' => '',
-    					'prepend' => '',
-    					'append' => '',
-    				),
-    				array (
-    					'key' => 'field_59030c05afd1b',
-    					'label' => __('Apartments Count', 'svbk-privatearea'),
-    					'name' => 'apartments_count',
-    					'type' => 'number',
-    					'instructions' => '',
-    					'required' => 0,
-    					'conditional_logic' => 0,
-    					'wrapper' => array (
-    						'width' => '',
-    						'class' => '',
-    						'id' => '',
-    					),
-    					'default_value' => '',
-    					'placeholder' => '',
-    					'prepend' => '',
-    					'append' => '',
-    					'min' => 0,
-    					'max' => '',
-    					'step' => 1,
-    				),
-    				array (
-    					'key' => 'field_59030c33afd1c',
-    					'label' => __('Beds Count', 'svbk-privatearea'),
-    					'name' => 'beds_count',
-    					'type' => 'number',
-    					'instructions' => '',
-    					'required' => 0,
-    					'conditional_logic' => 0,
-    					'wrapper' => array (
-    						'width' => '',
-    						'class' => '',
-    						'id' => '',
-    					),
-    					'default_value' => '',
-    					'placeholder' => '',
-    					'prepend' => '',
-    					'append' => '',
-    					'min' => 0,
-    					'max' => '',
-    					'step' => '',
-    				),
-    			),
-    		),
     
     	),
     	'location' => array (
@@ -567,14 +384,437 @@ function svbk_privatearea_acf_register_fields(){
     	'hide_on_screen' => '',
     	'active' => 1,
     	'description' => '',
+    ));	
+	
+    acf_add_local_field_group(array (
+    	'key' => 'svbk_privatearea_options_membership',
+    	'title' => 'Membership',
+    	'fields' => array (
+    		array (
+    			'key' => 'svbk_privatearea_user_levels',
+    			'label' => __('User Levels', 'svbk-privatearea'),
+    			'name' => 'svbk_privatearea_levels',
+    			'type' => 'repeater',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'collapsed' => '',
+    			'min' => 0,
+    			'max' => 0,
+    			'layout' => 'row',
+    			'button_label' => '',
+    			'sub_fields' => array (
+    				array (
+    					'key' => 'svbk_privatearea_user_level_name',
+    					'label' => __('Level Name', 'svbk-privatearea'),
+    					'name' => 'name',
+    					'type' => 'text',
+    					'instructions' => '',
+    					'required' => 0,
+    					'conditional_logic' => 0,
+    					'wrapper' => array (
+    						'width' => '',
+    						'class' => '',
+    						'id' => '',
+    					),
+    					'default_value' => '',
+    					'placeholder' => '',
+    					'prepend' => '',
+    					'append' => '',
+    					'maxlength' => '',
+    				),
+    				array (
+    					'key' => 'svbk_privatearea_user_level_role',
+    					'label' => __('Level Role', 'svbk-privatearea'),
+    					'name' => 'role',
+    					'type' => 'text',
+    					'instructions' => '',
+    					'required' => 0,
+    					'conditional_logic' => 0,
+    					'wrapper' => array (
+    						'width' => '',
+    						'class' => '',
+    						'id' => '',
+    					),
+    					'default_value' => '',
+    					'placeholder' => '',
+    					'prepend' => '',
+    					'append' => '',
+    					'maxlength' => '',
+    				),
+    				array (
+    					'key' => 'svbk_privatearea_user_level_price',
+    					'label' => __('Price', 'svbk-privatearea'),
+    					'name' => 'price',
+    					'type' => 'number',
+    					'instructions' => '',
+    					'required' => 0,
+    					'conditional_logic' => 0,
+    					'wrapper' => array (
+    						'width' => '',
+    						'class' => '',
+    						'id' => '',
+    					),
+    					'default_value' => '',
+    					'placeholder' => '',
+    					'prepend' => '',
+    					'append' => '',
+    					'min' => '',
+    					'max' => '',
+    					'step' => '',
+    				),
+    				array (
+    					'key' => 'svbk_privatearea_user_level_discounted',
+    					'label' => __('Discounted Price', 'svbk-privatearea'),
+    					'name' => 'discounted_price',
+    					'type' => 'number',
+    					'instructions' => '',
+    					'required' => 0,
+    					'conditional_logic' => 0,
+    					'wrapper' => array (
+    						'width' => '',
+    						'class' => '',
+    						'id' => '',
+    					),
+    					'default_value' => '',
+    					'placeholder' => '',
+    					'prepend' => '',
+    					'append' => '',
+    					'min' => '',
+    					'max' => '',
+    					'step' => '',
+    				),
+					array (
+						'key' => 'svbk_privatearea_user_level_discount_duration',
+						'label' => __('Discount Duration (minutes)', 'svbk-privatearea'),
+						'name' => 'discount_duration',
+						'type' => 'number',
+						'instructions' => '',
+						'required' => 0,
+						'conditional_logic' => 0,
+						'wrapper' => array (
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'default_value' => '',
+						'placeholder' => '',
+						'prepend' => '',
+						'append' => '',
+						'min' => 0,
+						'max' => '',
+						'step' => 1,
+					),  
+					array (
+						'key' => 'svbk_privatearea_user_level_capabilities',
+						'label' => __('Capabilities', 'svbk-privatearea'),
+						'name' => 'capabilities',
+						'type' => 'textarea',
+						'instructions' => __('One per line', 'svbk-privatearea'),
+						'required' => 0,
+						'conditional_logic' => 0,
+						'wrapper' => array (
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'default_value' => '',
+						'placeholder' => '',
+						'maxlength' => '',
+						'rows' => '',
+						'new_lines' => '',
+					),	
+					array (
+						'key' => 'svbk_privatearea_user_level_oto_page',
+						'label' => __('OTO Page', 'viverediturismo'),
+						'name' => 'oto_page',
+						'type' => 'post_object',
+						'instructions' => '',
+						'required' => 0,
+						'conditional_logic' => 0,
+						'wrapper' => array (
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'post_type' => array (
+						),
+						'taxonomy' => array (
+						),
+						'allow_null' => 1,
+						'multiple' => 0,
+						'return_format' => 'id',
+						'ui' => 1,
+					),
+					array (
+						'key' => 'svbk_privatearea_user_level_pay_page',
+						'label' => __('Payment Page', 'viverediturismo'),
+						'name' => 'payment_page',
+						'type' => 'post_object',
+						'instructions' => '',
+						'required' => 0,
+						'conditional_logic' => 0,
+						'wrapper' => array (
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'post_type' => array (
+						),
+						'taxonomy' => array (
+						),
+						'allow_null' => 1,
+						'multiple' => 0,
+						'return_format' => 'id',
+						'ui' => 1,
+					),					
+    			),
+    		),
+    		array (
+    			'key' => 'field_594cecd3ffc4c',
+    			'label' => __('Profile Fields form Group', 'svbk-privatearea'),
+    			'name' => 'svbk_privatearea_profile_form_group',
+    			'type' => 'select',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'choices' => wp_list_pluck( array_merge( (array)acf_get_field_groups(), (array)acf_get_local_field_groups() ), 'title' ,'key' ),
+    			'default_value' => array (
+    				'svbk_privatearea_profile_fields'
+    			),
+    			'allow_null' => 0,
+    			'multiple' => 0,
+    			'ui' => 0,
+    			'ajax' => 0,
+    			'return_format' => 'value',
+    			'placeholder' => '',
+    		),    		
+    	),
+    	'location' => array (
+    		array (
+    			array (
+    				'param' => 'options_page',
+    				'operator' => '==',
+    				'value' => 'acf-options-membership',
+    			),
+    		),
+    	),
+    	'menu_order' => 0,
+    	'position' => 'normal',
+    	'style' => 'default',
+    	'label_placement' => 'top',
+    	'instruction_placement' => 'label',
+    	'hide_on_screen' => '',
+    	'active' => 1,
+    	'description' => '',
+    ));	
+	
+    acf_add_local_field_group(array (
+    	'key' => 'svbk_privatearea_post_acl',
+    	'title' => __('Access restriction', 'svbk-privatearea'),
+    	'fields' => array (
+    		array (
+    			'key' => 'svbk_privatearea_post_required_membership_level',
+    			'label' => __('Membership Level', 'svbk-privatearea'),
+    			'name' => 'required_membership_level',
+    			'type' => 'select',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'choices' => Membership::levels(),
+    			'default_value' => array (
+    				0 => 'none',
+    			),
+    			'allow_null' => 1,
+    			'multiple' => 0,
+    			'ui' => 0,
+    			'ajax' => 0,
+    			'return_format' => 'value',
+    			'placeholder' => '',
+    		),
+    		array (
+    			'key' => 'svbk_privatearea_post_required_capability',
+    			'label' => __('User Capability', 'svbk-privatearea'),
+    			'name' => 'required_capability',
+    			'type' => 'text',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'choices' => array (
+    				'none' => 'None',
+    			),
+    			'default_value' => '',
+    			'allow_null' => 1,
+    			'multiple' => 0,
+    			'ui' => 0,
+    			'ajax' => 0,
+    			'return_format' => 'value',
+    			'placeholder' => '',
+    		),
+    	),
+    	'location' => array (
+    		array (
+    			array (
+    				'param' => 'post_status',
+    				'operator' => '==',
+    				'value' => 'publish',
+    			),
+    		),
+    	),
+    	'menu_order' => 0,
+    	'position' => 'side',
+    	'style' => 'default',
+    	'label_placement' => 'top',
+    	'instruction_placement' => 'label',
+    	'hide_on_screen' => '',
+    	'active' => 1,
+    	'description' => '',
     ));
     
+    
     acf_add_local_field_group(array (
-    	'key' => 'group_59035733550b1',
+    	'key' => 'svbk_privatearea_subscription_details',
+    	'title' => _x('Member Subscription Details', 'field group', 'svbk-privatearea'),
+    	'fields' => array (
+    		array (
+    			'key' => 'svbk_privatearea_subscription_type',
+    			'label' => __('Member Type', 'svbk-privatearea'),
+    			'name' => Profile::MEMBER_TYPE_FIELD,
+    			'type' => 'radio',
+    			'instructions' => '',
+    			'required' => 1,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'choices' => ACL::available_roles(),
+    			'allow_null' => 0,
+    			'other_choice' => 0,
+    			'save_other_choice' => 0,
+    			'default_value' => '',
+    			'layout' => 'vertical',
+    			'return_format' => 'value',
+    		),
+    		array (
+    			'key' => 'svbk_privatearea_subscription_date',
+    			'label' => __('Current Subscription Date', 'svbk-privatearea'),
+    			'name' => Profile::DATE_FIELD,
+    			'type' => 'date_picker',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'display_format' => 'd/m/Y',
+    			'return_format' => 'U',
+    			'first_day' => 1,
+    		),
+    		array (
+    			'key' => 'svbk_privatearea_subscription_expire',
+    			'label' => __('Subscription Expire Date', 'svbk-privatearea'),
+    			'name' => Profile::EXPIRE_FIELD,
+    			'type' => 'date_picker',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'display_format' => 'd/m/Y',
+    			'return_format' => 'U',
+    			'first_day' => 1,
+    		),
+    		array (
+    			'key' => 'svbk_privatearea_expired_notification_sent',
+    			'label' => __('Expired Notification Sent', 'svbk-privatearea'),
+    			'name' => 'subscription_expired_notification_sent',
+    			'type' => 'true_false',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'message' => __('Uncheck this flag to resend the notification', 'svbk-privatearea'),
+    			'default_value' => 0,
+    			'ui' => 0,
+    			'ui_on_text' => '',
+    			'ui_off_text' => '',
+    		),
+    		array (
+    			'key' => 'svbk_privatearea_expiring_notification_sent',
+    			'label' => __('Expiring Notification Sent', 'svbk-privatearea'),
+    			'name' => 'subscription_expiring_notification_sent',
+    			'type' => 'true_false',
+    			'instructions' => '',
+    			'required' => 0,
+    			'conditional_logic' => 0,
+    			'wrapper' => array (
+    				'width' => '',
+    				'class' => '',
+    				'id' => '',
+    			),
+    			'message' => __('Uncheck this flag to resend the notification', 'svbk-privatearea'),
+    			'default_value' => 0,
+    			'ui' => 0,
+    			'ui_on_text' => '',
+    			'ui_off_text' => '',
+    		),
+    	),
+    	'location' => array (
+    		array (
+    			array (
+    				'param' => 'post_type',
+    				'operator' => '==',
+    				'value' => 'member',
+    			),
+    		),
+    	),
+    	'menu_order' => 0,
+    	'position' => 'side',
+    	'style' => 'default',
+    	'label_placement' => 'top',
+    	'instruction_placement' => 'label',
+    	'hide_on_screen' => '',
+    	'active' => 1,
+    	'description' => '',
+    ));
+
+    acf_add_local_field_group(array (
+    	'key' => 'svbk_privatearea_user_fields',
     	'title' => __('User Fields', 'svbk-privatearea'),
     	'fields' => array (
     		array (
-    			'key' => 'field_59035720398d',
+    			'key' => 'svbk_privatearea_user_first_name',
     			'label' => __('First Name', 'svbk-privatearea'),
     			'name' => 'first_name',
     			'type' => 'text',
@@ -593,7 +833,7 @@ function svbk_privatearea_acf_register_fields(){
     			'maxlength' => '',
     		),
     		array (
-    			'key' => 'field_5903575ksa98d',
+    			'key' => 'svbk_privatearea_user_last_name',
     			'label' => __('Last Name', 'svbk-privatearea'),
     			'name' => 'last_name',
     			'type' => 'text',
@@ -612,7 +852,7 @@ function svbk_privatearea_acf_register_fields(){
     			'maxlength' => '',
     		),	
     		array (
-    			'key' => 'field_59035753xt98d',
+    			'key' => 'svbk_privatearea_user_email',
     			'label' => __('E-mail', 'svbk-privatearea'),
     			'name' => 'user_email',
     			'type' => 'email',
@@ -631,7 +871,7 @@ function svbk_privatearea_acf_register_fields(){
     			'maxlength' => '',
     		),			
     		array (
-    			'key' => 'field_5903573a0e98b',
+    			'key' => 'svbk_privatearea_user_' . Member::PROFILE_FIELD,
     			'label' => __('Member Profile', 'svbk-privatearea'),
     			'name' => Member::PROFILE_FIELD,
     			'type' => 'post_object',
@@ -654,7 +894,7 @@ function svbk_privatearea_acf_register_fields(){
     			'ui' => 1,
     		),
     		array (
-    			'key' => 'field_590357d70e98d',
+    			'key' => 'svbk_privatearea_user_' . Member::BUSINESS_ROLE_FIELD,
     			'label' => __('Business Role', 'svbk-privatearea'),
     			'name' => Member::BUSINESS_ROLE_FIELD,
     			'type' => 'text',
@@ -673,7 +913,7 @@ function svbk_privatearea_acf_register_fields(){
     			'maxlength' => '',
     		),
     		array (
-    			'key' => 'field_590357ea0e98e',
+    			'key' => 'svbk_privatearea_user_' . Member::PROFILE_PICTURE_FIELD,
     			'label' => __('Profile Picture', 'svbk-privatearea'),
     			'name' => Member::PROFILE_PICTURE_FIELD,
     			'type' => 'image',
@@ -731,11 +971,11 @@ function svbk_privatearea_acf_register_fields(){
     ));
     
     acf_add_local_field_group(array (
-    	'key' => 'group_594a2a7f5e422',
+    	'key' => 'svbk_privatearea_profile_payments',
     	'title' => __('Membership Payments', 'svbk-privatearea'),
     	'fields' => array (
     		array (
-    			'key' => 'field_594a2a84029be',
+    			'key' => 'svbk_privatearea_profile_payments_list',
     			'label' => __('Payments', 'svbk-privatearea'),
     			'name' => 'payments',
     			'type' => 'repeater',
@@ -747,14 +987,14 @@ function svbk_privatearea_acf_register_fields(){
     				'class' => '',
     				'id' => '',
     			),
-    			'collapsed' => 'field_594a2ac4029c0',
+    			'collapsed' => 'svbk_privatearea_payment_date',
     			'min' => 0,
     			'max' => 0,
     			'layout' => 'table',
     			'button_label' => '',
     			'sub_fields' => array (
     				array (
-    					'key' => 'field_594a2a98029bf',
+    					'key' => 'svbk_privatearea_payment_tx',
     					'label' => __('Transaction', 'svbk-privatearea'),
     					'name' => 'transaction',
     					'type' => 'text',
@@ -773,7 +1013,7 @@ function svbk_privatearea_acf_register_fields(){
     					'maxlength' => '',
     				),
     				array (
-    					'key' => 'field_594a2ac4029c0',
+    					'key' => 'svbk_privatearea_payment_date',
     					'label' => __('Date', 'svbk-privatearea'),
     					'name' => 'date',
     					'type' => 'date_picker',
@@ -790,7 +1030,7 @@ function svbk_privatearea_acf_register_fields(){
     					'first_day' => 1,
     				),
     				array (
-    					'key' => 'field_594a2af2029c1',
+    					'key' => 'svbk_privatearea_payment_amount',
     					'label' => __('Payed Amount', 'svbk-privatearea'),
     					'name' => 'payed_amount',
     					'type' => 'number',
@@ -811,7 +1051,7 @@ function svbk_privatearea_acf_register_fields(){
     					'step' => '',
     				),
     				array (
-    					'key' => 'field_594a2b0b029c2',
+    					'key' => 'svbk_privatearea_payment_invoice',
     					'label' => __('Invoice ID', 'svbk-privatearea'),
     					'name' => 'invoice_id',
     					'type' => 'text',
