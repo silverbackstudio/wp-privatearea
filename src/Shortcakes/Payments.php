@@ -37,7 +37,8 @@ class Payments extends Shortcake {
 
         $invoices = filter_var($attr['invoices'], FILTER_VALIDATE_BOOLEAN);
 
-        $content = '<table>';
+        $content = '<table id="payments">';
+        $content .= ' <thead>';
         $content .= '   <tr>';
         $content .= '       <th>' . __( 'Date', 'svbk-privatearea' ) . '</th>';
         $content .= '       <th>' . __( 'Amount', 'svbk-privatearea' ) . '</th>';
@@ -47,7 +48,9 @@ class Payments extends Shortcake {
         }
         
         $content .= '   </tr>';    
-            
+        $content .= ' </thead>';
+        
+        $content .= '<tbody>';
         while ( have_rows('payments', $profile->id()) ) : the_row();
             $content .= '<tr>';
             $content .= '   <td>' . date_i18n( get_option( 'date_format' ), intval( get_sub_field('date')) )  . '</td>';
@@ -61,15 +64,16 @@ class Payments extends Shortcake {
                                 'invoice_seq' => get_row_index() 
                             )  
                         ) 
-                    ) . ' " target="_blank">' . 
+                    ) . ' " target="_blank"><span>' . 
                     sprintf( __( 'Download Invoice (#%d)', 'svbk-privatearea' ), get_sub_field('invoice_id') ) . 
-                    '</a></td>';
+                    '</span></a></td>';
             }
             
             $content .= '</tr>';
             
         endwhile;        
         
+        $content .= '</tbody>';
         $content .= '</table>';
         
         return $content;
