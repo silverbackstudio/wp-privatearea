@@ -52,11 +52,16 @@ class Payments extends Shortcake {
         
         $content .= '<tbody>';
         while ( have_rows('payments', $profile->id()) ) : the_row();
+        
+            if( ! get_sub_field('date') && ! get_sub_field('payed_amount') ) {
+                continue;
+            }
+        
             $content .= '<tr>';
             $content .= '   <td>' . date_i18n( get_option( 'date_format' ), intval( get_sub_field('date')) )  . '</td>';
             $content .= '   <td>' . number_format_i18n( get_sub_field('payed_amount'), 2 ) . ' &euro;</td>';
              
-            if( $invoices && get_row_index() ) {
+            if( $invoices && get_sub_field('invoice_id') ) {
                 $content .= '<td><a href="' . esc_url( 
                         add_query_arg( 
                             array( 
