@@ -360,8 +360,12 @@ function payment_ipn( WP_REST_Request $request ){
 
     $profile->subscription_extend( $paymentDate, new DateInterval( Helpers\Theme\Theme::conf('subscription', 'duration') ) );
 
-    $invoiceId = intval( get_option('svbk_privatearea_last_invoice_id') ) + 1;
-    update_option('svbk_privatearea_last_invoice_id', $invoiceId);
+    $invoiceId = intval( get_option('svbk_privatearea_last_invoice_id', 0) );
+    
+    if( $invoiceId ) {
+        $invoiceId++;
+        update_option('svbk_privatearea_last_invoice_id', $invoiceId);
+    }
 
     if( function_exists('add_row') ) {
         
@@ -808,7 +812,7 @@ function acf_member_email_field( $field ) {
     return $field;
 }
 
-function pdf_apply_template(PDF $mpdf, $template){
+function pdf_apply_template( PDF $mpdf, $template, $data = array() ){
 
 	$css_path = file_exists( get_theme_file_path( $template . '.css' ) ) ? get_theme_file_path($template . '.css') : ( plugin_dir_path( __FILE__ ) . "templates/{$template}.css" );
 	
@@ -819,9 +823,19 @@ function pdf_apply_template(PDF $mpdf, $template){
 
     ob_start();
 
-    if( ! locate_template("pdf-templates/{$template}.php", true, false) ) {
-        load_template( plugin_dir_path( __FILE__ ) . "templates/{$template}.php", false);
+    extract($data);
+    
+    $path = locate_template("pdf-templates/{$template}.php", false, false);
+
+    if( ! $path ) {
+        $path = require( plugin_dir_path( __FILE__ ) . "templates/{$template}.php");
     } 
+
+    if( ! file_exists($path) ) {
+       return false;
+    }     
+    
+    require($path);
  
     $html = ob_get_contents();
     ob_end_clean();
@@ -857,16 +871,39 @@ function download_page_trigger()
         	$pdf->setAutoTopMargin = 'pad';
             $pdf->orig_tMargin = 30;
         	
-        	if( ! $profile->meta('invoice_number') ) {
+        	$data = array(
+        	    'profile' => $profile   
+        	);
+        	
+        	if( function_exists('have_rows') && have_rows( 'payments', $profile->id() ) ) {
+        	    $seq = filter_input(INPUT_GET, 'invoice_seq', FILTER_VALIDATE_INT);
+        	    
+        	    while ( have_rows('payments' , $profile->id()) ) : the_row();
+        	          
+        	          $data['invoice_id'] = get_sub_field('invoice_id');
+        	          $data['payed_amount'] = get_sub_field('payed_amount');
+        	          $data['payment_date'] = date('d/m/Y', get_sub_field('date') );
+        	          
+        	          if ( $seq && ( get_row_index() === $seq )  ) break;
+        	          
+        	    endwhile;
+        	    
+        	} else if( $profile->meta('invoice_number') ) {       
+        	    
+        	    $data['invoice_id'] =  $profile->meta('invoice_number');
+        	    $data['payed_amount'] =  Helpers\Theme\Theme::conf('subscription', 'price');
+        	    $data['payment_date'] = $profile->subscription_date()->format('d/m/Y');
+        	    
+        	} else {
         	    wp_die( __('Your invoice is\'t ready yet. Please try again later', 'svbk-privatearea') );
         	}   
         	
-            $pdf = pdf_apply_template($pdf, 'invoice' );
-            $pdf->SetTitle( sprintf( __('%s - Invoice N. %s - Date %s ', 'svbk-privatearea'), get_bloginfo('name'), $profile->meta('invoice_number'), $profile->subscription_date()->format('d/m/Y')) );
+            $pdf->SetTitle( sprintf( __('%s - Invoice N. %s - Date %s ', 'svbk-privatearea'), get_bloginfo('name'), $data['invoice_id'], $data['payment_date']) );
+            $pdf = pdf_apply_template($pdf, 'invoice', $data);
             
             break;
         case 'certificate':
-        	$pdf = new PDF( array('orientation' => 'L', 'margin_top'=>30, 'tempDir' => '/tmp/mpdf/') );
+        	$pdf = new PDF( array('orientation' => 'L', 'margin_top' => 30, 'tempDir' => '/tmp/mpdf/' ) );
         	$pdf->SetDisplayMode('fullpage');
         	$pdf->AddPage('L');
     
@@ -874,13 +911,16 @@ function download_page_trigger()
         	    wp_die( __('TThe certificate is available only to full members.', 'svbk-privatearea') );
         	}
         	
-            $pdf = pdf_apply_template($pdf, 'certificate' );
-        
-            $pdf->SetTitle( sprintf( __('%s - Certificate %s ', 'svbk-privatearea'), get_bloginfo('name'), date('Y'), $profile->subscription_date()->format('d/m/Y')) );
+            $pdf->SetTitle( sprintf( __('%s - Certificate %s ', 'svbk-privatearea'), get_bloginfo('name'), date('Y'), $profile->subscription_date()->format('d/m/Y')) );        	
+            $pdf = pdf_apply_template($pdf, 'certificate', $data);
 
             break;         
         default:
             return;
+    }
+    
+    if( false === $pdf ) {
+        wp_die( __('The file you requested is not available, please contact the website owner', 'svbk-privatearea') );
     }
     
     $pdf->SetAuthor( get_bloginfo('contact_company_name') );

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SilverbackStudio Member Private Area\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-21 09:46+0000\n"
-"PO-Revision-Date: 2017-06-21 09:58+0000\n"
+"POT-Creation-Date: 2017-10-31 14:09+0000\n"
+"PO-Revision-Date: 2017-10-31 14:32+0000\n"
 "Last-Translator: Silverback Studio <webmaster2@silverbackstudio.it>\n"
 "Language-Team: Italian\n"
 "Language: it-IT\n"
@@ -13,204 +13,41 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:17
-msgctxt "field group"
-msgid "Member Subscription Details"
-msgstr "Dettagli iscrizione associato"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:923
+msgid ""
+"The file you requested is not available, please contact the website owner"
+msgstr ""
+"Il file che hai richiesto non e' piu disponibile, contattare il gestore del "
+"sito per maggiori informazioni."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:42
-msgid "Current Subscription Date"
-msgstr "Data Iscrizione Corrente"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:59
-msgid "Subscription Expire Date"
-msgstr "Data scadenza iscrizione"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:95
-msgid "Expired Notification Sent"
-msgstr "Notifica scaduto inviata"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:106
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:125
-msgid "Uncheck this flag to resend the notification"
-msgstr "Rimuovi questa spunta per inviare nuovamente la notifica"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:114
-msgid "Expiring Notification Sent"
-msgstr "Notifica in scadenza inviata"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:154
-msgctxt "field group"
-msgid "Member Details"
-msgstr "Dettagli Associato"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:158
-msgid "CEO First Name"
-msgstr "Nome Rappresentante Legale"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:177
-msgid "CEO Last Name"
-msgstr "Cognome Rappresentate Legale"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:234
-msgid "Billing Address"
-msgstr "Indirizzo fatturazione"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:253
-msgid "Billing City"
-msgstr "Cittá"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:272
-msgid "Billing Post Code"
-msgstr "CAP"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:291
-msgid "Billing State/Province"
-msgstr "Provincia"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:310
-msgid "Billing Country"
-msgstr "Stato"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:332
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:616
-msgid "E-mail"
-msgstr "E-mail"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:407
-msgid "Map Location"
-msgstr "Posizione sulla mappa"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:1009
+msgid "No title"
+msgstr "Nessun Titolo"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:425
-msgid "Logo Azienda"
-msgstr ""
+msgid "Company Logo"
+msgstr "Logo Azienda"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:449
-msgid "Apartment Types"
-msgstr "Tipologia appartamenti"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:15
+msgid "Payments Table"
+msgstr "Lista pagamenti"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:486
-msgid "Add Apartment Group"
-msgstr "Aggiungi una cittá"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:25
+msgid "Show Invoices"
+msgstr "Mostra fatture"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:509
-msgid "Apartments Count"
-msgstr "Numero di appartamenti"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:28
+msgid "Show invoices column"
+msgstr "Mostra colonna fattura"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:530
-msgid "Beds Count"
-msgstr "Numero di posti letto"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:46
+msgid "Invoice"
+msgstr "Fattura"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:574
-msgid "User Fields"
-msgstr "Campi utente"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:658
-msgid "Business Role"
-msgstr "Ruolo in azienda"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:677
-msgid "Profile Picture"
-msgstr "Immagine profilo"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:735
-msgid "Membership Payments"
-msgstr "Pagamenti associati"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:739
-msgid "Payments"
-msgstr "Pagamenti"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:758
-msgid "Transaction"
-msgstr "Transazione"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:777
-msgid "Date"
-msgstr "Data"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:794
-msgid "Payed Amount"
-msgstr "Importo pasgato"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:815
-msgid "Invoice ID"
-msgstr "Ricevuta Numero"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:966
-msgid "No title"
-msgstr ""
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/PayMembership.php:19
-msgid "Pay Subscription"
-msgstr "Effettua pagamento iscrizione"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/PayMembership.php:25
-msgid "Renew Button Label"
-msgstr "Etichetta pulsate di rinnovo"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/PayMembership.php:30
-msgid "Upgrade Button Label"
-msgstr "Etichetta pulsante di Iscrizione"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:21
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:35
-msgid "Member Type"
-msgstr "Tipo Associato"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:76
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:34
-msgid "Invoice Number"
-msgstr "Fattura Numero"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:196
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:44
-msgid "Company Name"
-msgstr "Ragione sociale"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:215
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:17
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:39
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:50
-msgid "VAT ID / SSN"
-msgstr "Partite IVA / Codice Fiscale"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:350
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:90
-msgid "Phone"
-msgstr "Telefono"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:369
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:96
-msgid "Mobile"
-msgstr "Cellulare"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:388
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:102
-msgid "Website"
-msgstr "Sito Web"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:490
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:68
-msgid "City"
-msgstr "Citta"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:578
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:26
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:32
-msgid "First Name"
-msgstr "Nome"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:597
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:32
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:33
-msgid "Last Name"
-msgstr "Cognome"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:635
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:956
-msgid "Member Profile"
-msgstr "Profilo Aziendale"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:65
+#, php-format
+msgid "Download Invoice (#%d)"
+msgstr "Scarica Fattura (#%d)"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:96
 #, php-format
@@ -245,20 +82,20 @@ msgstr "Errore di creazione profilo su Mailchimp per l'utente %s: %s."
 msgid "Business of %s"
 msgstr "Società di %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:763
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:770
 #, php-format
 msgid "%s - E-mail change request"
 msgstr "%s - Richiesta modifica email"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:786
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:793
 msgid "This email address is invalid"
 msgstr "L'indirizzo e-mail non é valido."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:790
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:797
 msgid "This email address already exists"
 msgstr "L'indirizzo email é gia presente."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:802
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:809
 #, php-format
 msgid ""
 "Email change request pending. We sent an email to %s, please click on the "
@@ -267,36 +104,216 @@ msgstr ""
 "É in corso una modifica dell'e-mail. Abbiamo inviato un messaggio a %s, per "
 "confermare clicca sulla conferma al suo interno."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:844
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:861
 msgid "Your account profile not exists or is not been approved yet."
 msgstr "Il tuo profilo non esiste ancora o non é ancora stato approvato."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:858
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:898
 msgid "Your invoice is't ready yet. Please try again later"
 msgstr ""
 "La tua fattura non é ancora pronta. Per favore riprova fra qualche giorno."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:862
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:901
 #, php-format
 msgid "%s - Invoice N. %s - Date %s "
 msgstr "%s - Fattura N. %s in data %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:871
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:911
 msgid "TThe certificate is available only to full members."
 msgstr "Il certificato é disponibile solo per gli Associati."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:876
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:914
 #, php-format
 msgid "%s - Certificate %s "
 msgstr "%s - Certificato %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:924
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:938
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:967
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:981
 #, php-format
 msgid "Warning %s"
 msgstr "Attenzione %s"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:91
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/privatearea.php:999
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:635
+msgid "Member Profile"
+msgstr "Profilo Aziendale"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:17
+msgctxt "field group"
+msgid "Member Subscription Details"
+msgstr "Dettagli iscrizione associato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:21
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:35
+msgid "Member Type"
+msgstr "Tipo Associato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:42
+msgid "Current Subscription Date"
+msgstr "Data Iscrizione Corrente"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:59
+msgid "Subscription Expire Date"
+msgstr "Data scadenza iscrizione"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:76
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:34
+msgid "Invoice Number"
+msgstr "Fattura Numero"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:95
+msgid "Expired Notification Sent"
+msgstr "Notifica scaduto inviata"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:106
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:125
+msgid "Uncheck this flag to resend the notification"
+msgstr "Rimuovi questa spunta per inviare nuovamente la notifica"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:114
+msgid "Expiring Notification Sent"
+msgstr "Notifica in scadenza inviata"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:154
+msgctxt "field group"
+msgid "Member Details"
+msgstr "Dettagli Associato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:158
+msgid "CEO First Name"
+msgstr "Nome Rappresentante Legale"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:177
+msgid "CEO Last Name"
+msgstr "Cognome Rappresentate Legale"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:196
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:44
+msgid "Company Name"
+msgstr "Ragione sociale"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:215
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:17
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:39
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:50
+msgid "VAT ID / SSN"
+msgstr "Partite IVA / Codice Fiscale"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:234
+msgid "Billing Address"
+msgstr "Indirizzo fatturazione"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:253
+msgid "Billing City"
+msgstr "Cittá"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:272
+msgid "Billing Post Code"
+msgstr "CAP"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:291
+msgid "Billing State/Province"
+msgstr "Provincia"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:310
+msgid "Billing Country"
+msgstr "Stato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:332
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:616
+msgid "E-mail"
+msgstr "E-mail"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:350
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:90
+msgid "Phone"
+msgstr "Telefono"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:369
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:96
+msgid "Mobile"
+msgstr "Cellulare"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:388
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:102
+msgid "Website"
+msgstr "Sito Web"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:407
+msgid "Map Location"
+msgstr "Posizione sulla mappa"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:449
+msgid "Apartment Types"
+msgstr "Tipologia appartamenti"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:486
+msgid "Add Apartment Group"
+msgstr "Aggiungi una cittá"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:490
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:68
+msgid "City"
+msgstr "Citta"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:509
+msgid "Apartments Count"
+msgstr "Numero di appartamenti"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:530
+msgid "Beds Count"
+msgstr "Numero di posti letto"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:574
+msgid "User Fields"
+msgstr "Campi utente"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:578
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:26
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:32
+msgid "First Name"
+msgstr "Nome"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:597
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Form/Subscription.php:32
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:33
+msgid "Last Name"
+msgstr "Cognome"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:658
+msgid "Business Role"
+msgstr "Ruolo in azienda"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:677
+msgid "Profile Picture"
+msgstr "Immagine profilo"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:735
+msgid "Membership Payments"
+msgstr "Pagamenti associati"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:739
+msgid "Payments"
+msgstr "Pagamenti"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:758
+msgid "Transaction"
+msgstr "Transazione"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:777
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:42
+msgid "Date"
+msgstr "Data"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:794
+msgid "Payed Amount"
+msgstr "Importo pasgato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/acf.php:815
+msgid "Invoice ID"
+msgstr "Ricevuta Numero"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/pluggables.php:92
 #, php-format
 msgid "Your account details at %s"
 msgstr "I dettagli del tuo account su %s"
@@ -326,6 +343,7 @@ msgid "Description"
 msgstr "Descrizione"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/templates/invoice.php:49
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Payments.php:43
 msgid "Amount"
 msgstr "Valore"
 
@@ -401,6 +419,30 @@ msgstr "Numero di cellulare non valido"
 msgid "Invalid website"
 msgstr "Sito web non valido"
 
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/PayMembership.php:19
+msgid "Pay Subscription"
+msgstr "Effettua pagamento iscrizione"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/PayMembership.php:25
+msgid "Renew Button Label"
+msgstr "Etichetta pulsate di rinnovo"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/PayMembership.php:30
+msgid "Upgrade Button Label"
+msgstr "Etichetta pulsante di Iscrizione"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:18
+msgid "Member Info"
+msgstr "Informazioni Associato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:28
+msgid "Member Field"
+msgstr "Campo Associato"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:34
+msgid "Expire ETA"
+msgstr "Giorni Rimanenti"
+
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/ProfileEdit.php:13
 msgid "Member Edit Form"
 msgstr "Modulo di modifica Associato"
@@ -416,22 +458,6 @@ msgstr "Tipologia Iscritto"
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/TypeContentFilter.php:28
 msgid "Show only to this member type"
 msgstr "Mostra contenuto solo a questo tipo di iscritto"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:28
-msgid "Subscription Form"
-msgstr "Form Iscrizione"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:32
-msgid "Thanks for your request, we will reply as soon as possible."
-msgstr "Grazie per la tua richiesta, risponderemo al piú presto possibile."
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:38
-msgid "Submit Button Label"
-msgstr "Etichetta pulsante invio"
-
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:42
-msgid "Submit Button label text"
-msgstr "Testo etichetta pulsante invio"
 
 #: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberEdit.php:13
 msgid "User Edit Form"
@@ -453,17 +479,21 @@ msgstr "Numero associati"
 msgid "How many members to show"
 msgstr "Quanti associati mostrare"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:18
-msgid "Member Info"
-msgstr "Informazioni Associato"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:28
+msgid "Subscription Form"
+msgstr "Form Iscrizione"
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:28
-msgid "Member Field"
-msgstr "Campo Associato"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:32
+msgid "Thanks for your request, we will reply as soon as possible."
+msgstr "Grazie per la tua richiesta, risponderemo al piú presto possibile."
 
-#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/MemberInfo.php:34
-msgid "Expire ETA"
-msgstr "Giorni Rimanenti"
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:38
+msgid "Submit Button Label"
+msgstr "Etichetta pulsante invio"
+
+#: ../../themes/property-manager/vendor/silverbackstudio/wp-privatearea/src/Shortcakes/Subscription.php:42
+msgid "Submit Button label text"
+msgstr "Testo etichetta pulsante invio"
 
 #. Name of the plugin
 msgid "SilverbackStudio Member Private Area"

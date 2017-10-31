@@ -31,8 +31,8 @@ $profile = new PrivateArea\Profile( get_the_ID() );
         <sethtmlpagefooter name="myfooter" value="on" />
         mpdf-->
         
-        <h1 class="company-name"><?php _e('Invoice Number', 'svbk-privatearea'); ?>: <?php the_field('invoice_number'); ?></h1>
-        <div class="issue-date"><?php printf( _x('Date: %s', 'invoice', 'svbk-privatearea') , $profile->subscription_date()->format('d/m/Y') ); ?></div>
+        <h1 class="company-name"><?php _e('Invoice Number', 'svbk-privatearea'); ?>: <?php echo esc_html($invoice_id); ?></h1>
+        <div class="issue-date"><?php printf( _x('Date: %s', 'invoice', 'svbk-privatearea') , $payment_date ); ?></div>
         <div class="customer-details">
             <span style="font-size: 7pt; color: #555555; font-family: sans;">Spett.le:</span><br />
             <span style="font-weight: bold; font-size: 14pt;"><?php the_title() ?></span><br />
@@ -52,7 +52,7 @@ $profile = new PrivateArea\Profile( get_the_ID() );
             <tbody>
             <tr class="item">
                 <td class="description">Description</td>
-                <td class="cost">&euro;<?php printf('%.02f', Helpers\Theme\Theme::conf('subscription', 'price')); ?></td>
+                <td class="cost">&euro;<?php printf('%.02f', $payed_amount); ?></td>
             </tr>
             </tbody>
         </table>
