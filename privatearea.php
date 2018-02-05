@@ -1020,3 +1020,131 @@ add_filter( 'manage_users_custom_column', __NAMESPACE__.'\\user_columns_row', 10
  */
 require 'pluggables.php';
 require 'acf.php';
+
+
+// added to display Export Button in Profiles CPT admin page
+add_filter( 'views_edit-member',  __NAMESPACE__.'\\privatearea_export_button' );
+
+
+function privatearea_export_button( $views )
+{
+       $views['privatearea-export-csv'] = '<form class="submit" action="'. admin_url( 'admin-post.php' ).'" method="POST">' .
+       '<input type="hidden" name="action" value="privatearea_export_csv">'.
+       '<input type="submit" class="button-primary" value="'.__('Export CSV File', "propertymanagers").'">'.
+       wp_nonce_field( 'privatearea_export_user','_wpnonce', true, false).
+       '</form>';
+    return $views;
+}
+
+
+add_action( 'admin_post_privatearea_export_csv',  __NAMESPACE__.'\\privatearea_export_csv_members' );
+function privatearea_export_csv_members() {
+    
+     if ( !check_admin_referer( 'privatearea_export_user' ) ) {
+          wp_die( __('Not allowed operation', 'svbk-privatearea') );
+     }
+	
+	
+     // headers to send
+    $filename = 'Profili-Aziendali-dati';
+    $generatedDate = date('d-m-Y H_i_s');
+ 
+    /**
+     * output header so that file is downloaded
+     * instead of open for reading.
+    */
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: private", false);
+    header('Content-Type: text/csv; charset=utf-8');
+    header("Content-Disposition: attachment; filename=\"" . $filename . " " . $generatedDate . ".csv\";" );
+    header("Content-Transfer-Encoding: binary");
+    
+	    $posts = get_posts(array(
+		    'post_type'   => 'member',
+		    'post_status' => array('publish','draft'),
+		    'posts_per_page' => -1,
+		    'fields' => 'ids'
+		    )
+	    );
+	   
+		/**
+	     * create a file pointer connected to the output stream
+	     * @var [type]
+	     */
+		 $output = fopen('php://output', 'w');
+		 
+		 $array_fields_template = apply_filters( 'privatearea_export_columns', array(             // Mask for heading 
+		 	'member_type'=>'Tipo membro',
+		 	'subscription_date'=>'Data iscrizione corrente',
+		 	'subscription_expire_date'=>'Data scadenza iscrizione',
+		 	'billing_first_name'=> 'Nome rappresentante legale',
+		 	'billing_last_name'=>'Cognome rappresentante legale',
+		 	'billing_company' =>'Ragione sociale',
+		 	'billing_code'=>'Partita Iva / Codice Fiscale',
+		 	'billing_address_1'=>'Indirizzo fatturazione',
+		 	'billing_city'=>'Città',
+		 	'billing_postcode'=>'CAP',
+		 	'billing_state'=>'Provincia',
+		 	'billing_country'=>'Stato',
+		 	'billing_email'=>'E-mail',
+		 	'phone'=>'Telefono',
+		 	'mobile'=>'Cellulare',
+		 	'website'=>'Sito Web',
+		 	'apartments_count'=>'Numero di appartamenti',  
+		 	'beds_count'=>'Numero di posti letto',
+		 	'last_payment_date'=>'Data ultimo pagamento',
+		 	'transaction'=>'Transazione',
+		 	'payed_amount'=>'Importo pagato',
+		 	'invoice_id'=>'Ricevuta numero'
+		 	));  
+		  
+		 fputcsv( $output, $array_fields_template);   
+		
+		
+		 foreach($posts as $p){  
+		 	$fields = get_fields( $p );      // Array total of each Member post-type             
+		 	
+	 	    if( !empty( $fields['apartments'] ) ){  
+			 	$apartments = wp_list_pluck($fields['apartments'], 'apartments_count');
+			    $fields['apartments_count'] = array_sum($apartments);
+			    
+			 	$beds = wp_list_pluck($fields['apartments'], 'beds_count');
+			    $fields['beds_count'] = array_sum($beds);
+	 	    }
+	 	    
+	 	    if( !empty( $fields['payments'] )  ){       
+	 	        $payment_dates =  wp_list_pluck($fields['payments'], 'date');
+	 	        
+	 	        $last_payment_timestamp = max($payment_dates);
+	 	        $fields['last_payment_date'] = date("d/m/Y", $last_payment_timestamp );
+	 	        
+	 	        $last_payment =  wp_list_filter($fields['payments'], array( 'date' => $last_payment_timestamp ) ) ;
+	 	        $last_payment = array_pop( $last_payment );              // deletes the last element of the array
+	 	        
+	 	        $fields['transaction'] =  $last_payment['transaction'];
+	 	        $fields['payed_amount'] = $last_payment['payed_amount'];
+	 	        $fields['invoice_id'] = $last_payment['invoice_id'];
+	 	    }
+	 	    
+	 	    if(  !empty( $fields['subscription_date'] )){                              
+	 	           $fields['subscription_date'] = date("d/m/Y", $fields['subscription_date'] );
+	 	    }
+	 	        
+	 	    if( !empty( $fields['subscription_expire_date'] )){         
+	 	           $fields['subscription_expire_date'] = date("d/m/Y", $fields['subscription_expire_date']  );
+	 	    }
+	 	    
+	 	    
+		 	 foreach( $array_fields_template as $key => $title ) {
+		 	 	$array_masked[$key] = empty( $fields[$key] ) ? '' : $fields[$key];
+		 	 }	 	    
+	 	   
+            fputcsv($output, apply_filters( 'privatearea_export_row_data', $array_masked, $p, $array_fields_template) );     //  use utf8_decode - to convert SPECIAL chars to normal ISO-8859-1
+         }
+            
+		 fclose($output);
+		 return $output;
+    
+}
