@@ -1028,11 +1028,12 @@ add_filter( 'views_edit-member',  __NAMESPACE__.'\\privatearea_export_button' );
 
 function privatearea_export_button( $views )
 {
-       $views['privatearea-export-csv'] = '<form class="submit" action="'. admin_url( 'admin-post.php' ).'" method="POST">' .
-       '<input type="hidden" name="action" value="privatearea_export_csv">'.
-       '<input type="submit" class="button-primary" value="'.__('Export CSV File', "propertymanagers").'">'.
-       wp_nonce_field( 'privatearea_export_user','_wpnonce', true, false).
-       '</form>';
+    $views['privatearea-export-csv'] = '<form class="submit" action="'. admin_url( 'admin-post.php' ).'" method="POST">' .
+    '<input type="hidden" name="action" value="privatearea_export_csv">'.
+    '<input type="submit" class="button-primary" value="'.__('Export CSV File', "propertymanagers").'">'.
+    wp_nonce_field( 'privatearea_export_user','_wpnonce', true, false).
+    '</form>';
+    
     return $views;
 }
 
